@@ -1,0 +1,24 @@
+{
+  "name": "tie-webapp",
+  "version": "1.0.0",
+  "description": "Web application for Travelers in Egypt",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fechan/TIE-webapp.git"
+  },
+  "author": "fechan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fechan/TIE-webapp/issues"
+  },
+  "homepage": "https://github.com/fechan/TIE-webapp#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "sqlite": "^4.0.14",
+    "sqlite3": "^5.0.0"
+  }
+}
