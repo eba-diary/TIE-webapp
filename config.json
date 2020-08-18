@@ -1,0 +1,4 @@
+{
+    "port": 8000,
+    "db_filename": "travelers_in_egypt.sqlite3"
+}
