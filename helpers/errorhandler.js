@@ -1,3 +1,9 @@
+/**
+ * Module that provides an error that can be handled by the error handler with a custom HTTP status
+ * and error message
+ * @module errorhandler
+ */
+
 const { response } = require("express");
 
 class HandleableError extends Error {
@@ -13,8 +19,13 @@ class HandleableError extends Error {
   }
 }
 
+/**
+ * Handles either a HandleableError, responds with a status and message based on that or
+ * if it's another kind of error, responds with 500 status code and generic server error message
+ * @param {Error}     err Error object
+ * @param {Response}  res Response object
+ */
 const handleError = (err, res) => {
-  console.log(err);
   let status;
   let responseBody;
   if ("httpStatus" in err) {
