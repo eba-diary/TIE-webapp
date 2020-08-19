@@ -54,11 +54,10 @@ app.get("/api/publication/:id", async function(req, res){
         "message": `Publication ID ${publicationId} doesn't exist`
       });
     } else {
-      res.type("json").send(info);
+      res.send(info);
     }
   } catch {
     res.status(500)
-      .type("json")
       .send({
         "status": 500,
         "message": "Internal server error"
