@@ -6,6 +6,7 @@
 const sqlite3 = require("sqlite3");
 const sqlite = require("sqlite");
 const express = require("express");
+const { handleError, HandleableError } = require("./helpers/errorhandler")
 const config = require("./config.json");
 
 const app = express();
@@ -30,7 +31,7 @@ const app = express();
  * @apiSuccess {Object} traveler.name         Traveler name
  * @apiSuccess {Object} traveler.nationality  Traveler's nationality
  */
-app.get("/api/publication/:id", async function(req, res){
+app.get("/api/publication/:id", async function(req, res, next){
   res.type("json");
   try {
     let publicationId = req.params["id"];
@@ -43,25 +44,16 @@ app.get("/api/publication/:id", async function(req, res){
                       ON p.traveler_id == t.id
                       WHERE p.id == ?`, [publicationId])
     db.close();
-    info.traveler = {name: info.name, nationality: info.nationality}
-    delete info.name;
-    delete info.nationality;
     if (info === undefined) {
-      res.status(404)
-      .type("json")
-      .send({
-        "status": 404,
-        "message": `Publication ID ${publicationId} doesn't exist`
-      });
+      throw new HandleableError(404, `Publication ID ${publicationId} doesn't exist`);
     } else {
+      info.traveler = {name: info.name, nationality: info.nationality}
+      delete info.name;
+      delete info.nationality;
       res.send(info);
     }
-  } catch {
-    res.status(500)
-      .send({
-        "status": 500,
-        "message": "Internal server error"
-      });
+  } catch (error) {
+    next(error);
   }
 });
 
@@ -71,5 +63,9 @@ async function getDB() {
     driver: sqlite3.Database
   });
 }
+
+app.use(function(err, req, res, next) {
+  handleError(err, res);
+});
 
 app.listen(process.env.PORT || config["port"]);
