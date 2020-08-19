@@ -20,8 +20,8 @@ class HandleableError extends Error {
 }
 
 /**
- * Handles either a HandleableError, responds with a status and message based on that or
- * if it's another kind of error, responds with 500 status code and generic server error message
+ * Handles either a HandleableError, responding with a status and message based on that or
+ * if it's another kind of error, responding with 500 status code and generic server error message
  * @param {Error}     err Error object
  * @param {Response}  res Response object
  */
