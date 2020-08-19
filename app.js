@@ -16,14 +16,20 @@ const app = express();
  * @apiGroup  User
  * 
  * @apiParam {Number} id Publication's unique ID
- * @apiSuccess {Number} id                Publication ID
- * @apiSuccess {String} title             Publication title
- * @apiSuccess {String} travel_dates      Date or date range of travel
- * @apiSuccess {String} publisher         Publisher name
- * @apiSuccess {String} publication_place Place of publication
- * @apiSuccess {String} publication_date  Date of publication
+ * @apiSuccess {Number} id                    Publication ID
+ * @apiSuccess {String} title                 Publication title
+ * @apiSuccess {String} travel_dates          Date or date range of travel
+ * @apiSuccess {String} publisher             Publisher name
+ * @apiSuccess {String} publication_place     Place of publication
+ * @apiSuccess {String} publication_date      Date of publication
+ * @apiSuccess {String} publisher_misc        Miscellaneous publication info
+ * @apiSuccess {String} summary               Summary of the publication
+ * @apiSuccess {String} url                   Internet Archive URL
+ * @apiSuccess {String} iiif                  IIIF manifest URL
+ * @apiSuccess {Object} traveler              Traveler information
+ * @apiSuccess {Object} traveler.name         Traveler name
+ * @apiSuccess {Object} traveler.nationality  Traveler's nationality
  */
-//TODO: finish documenting this endpoint
 app.get("/api/publication/:id", async function(req, res){
   res.type("json");
   try {
@@ -37,6 +43,9 @@ app.get("/api/publication/:id", async function(req, res){
                       ON p.traveler_id == t.id
                       WHERE p.id == ?`, [publicationId])
     db.close();
+    info.traveler = {name: info.name, nationality: info.nationality}
+    delete info.name;
+    delete info.nationality;
     if (info === undefined) {
       res.status(404)
       .type("json")
