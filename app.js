@@ -42,7 +42,7 @@ app.get("/api/publications/:id", async function(req, res, next){
                       FROM publications p
                       INNER JOIN travelers t
                       ON p.traveler_id == t.id
-                      WHERE p.id == ?`, [publicationId])
+                      WHERE p.id == ?`, [publicationId]);
     db.close();
     if (info === undefined) {
       throw new HandleableError(404, `Publication ID ${publicationId} doesn't exist`);
