@@ -57,6 +57,29 @@ app.get("/api/publications/:id", async function(req, res, next){
   }
 });
 
+/**
+ * @api {get} /api/publications/ Get a list of publications
+ * @apiName   GetPublicationList
+ * @apiGroup  Publications
+ * 
+ * @apiParam {Number} [offset=0]  Pagination offset; returned entries will have greater IDs
+ * @apiParam {Number} count       Number of entries to return
+ * @apiSuccess {Object[]} publications          List of publications
+ * @apiSuccess {String}   publications.title    Title
+ * @apiSuccess {String}   publications.summary  Summary
+ * @apiSuccess {String}   publications.author   Author
+ * @apiSuccess {Number}   next_offset           Next pagination offset
+ */
+app.get("/api/publications/", async function(res, req, next){
+  res.type("json");
+  try{
+    let offset = req.query["offset"];
+    let db = await getDB();
+  } catch (error) {
+    next(error);
+  }
+});
+
 async function getDB() {
   return await sqlite.open({
     filename: config["db_filename"],
