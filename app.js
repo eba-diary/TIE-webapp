@@ -14,7 +14,7 @@ const app = express();
 /**
  * @api {get} /api/publications/:id Get publication information
  * @apiName   GetPublication
- * @apiGroup  User
+ * @apiGroup  Publications
  * 
  * @apiParam {Number} id Publication's unique ID
  * @apiSuccess {Number} id                    Publication ID
