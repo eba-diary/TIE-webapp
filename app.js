@@ -12,7 +12,7 @@ const config = require("./config.json");
 const app = express();
 
 /**
- * @api {get} /api/publication/:id Get publication information
+ * @api {get} /api/publications/:id Get publication information
  * @apiName   GetPublication
  * @apiGroup  User
  * 
@@ -31,7 +31,7 @@ const app = express();
  * @apiSuccess {Object} traveler.name         Traveler name
  * @apiSuccess {Object} traveler.nationality  Traveler's nationality
  */
-app.get("/api/publication/:id", async function(req, res, next){
+app.get("/api/publications/:id", async function(req, res, next){
   res.type("json");
   try {
     let publicationId = req.params["id"];
