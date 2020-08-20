@@ -80,6 +80,21 @@ app.get("/api/publications/", async function(res, req, next){
   }
 });
 
+/**
+ * Parses a client-received parameter as an int, defaulting to a given value if undefined and
+ * throwing an error if it's defined but not an int
+ * @param {String} paramName    Name of the parameter
+ * @param {String} paramValue   Value of the paramater received from client
+ * @param {Number} defaultValue If parameter value was undefined, return this default value 
+ */
+function parseOptionalIntParam(paramName, paramValue, defaultValue) {
+  let returnValue = paramValue === undefined ? defaultValue : parseInt(paramValue);
+  if (isNaN(returnValue)) {
+    throw new HandleableError(400, `Provided ${paramName} "${paramValue}" is not an integer.`)
+  }
+  return returnValue;
+}
+
 async function getDB() {
   return await sqlite.open({
     filename: config["db_filename"],
