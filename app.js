@@ -62,19 +62,33 @@ app.get("/api/publications/:id", async function(req, res, next){
  * @apiName   GetPublicationList
  * @apiGroup  Publications
  * 
- * @apiParam {Number} [offset=0]  Pagination offset; returned entries will have greater IDs
- * @apiParam {Number} count       Number of entries to return
+ * @apiParam {Number} [offset=-1] Pagination offset; returned entries will have greater IDs
+ * @apiParam {Number} [count=20]  Number of entries to return
  * @apiSuccess {Object[]} publications          List of publications
+ * @apiSuccess {Number}   publications.id       Publication ID
  * @apiSuccess {String}   publications.title    Title
  * @apiSuccess {String}   publications.summary  Summary
- * @apiSuccess {String}   publications.author   Author
+ * @apiSuccess {String}   publications.traveler Traveler
  * @apiSuccess {Number}   next_offset           Next pagination offset
  */
-app.get("/api/publications/", async function(res, req, next){
+app.get("/api/publications/", async function(req, res, next){
   res.type("json");
   try{
-    let offset = req.query["offset"];
+    let offset = parseOptionalIntParam("offset", req.query.offset, -1);
+    let count = parseOptionalIntParam("count", req.query.count, 20);
     let db = await getDB();
+    let publications = await db.all(`SELECT p.id, p.title, p.summary, t.name
+                                    FROM publications p
+                                    INNER JOIN travelers t
+                                    ON p.traveler_id == t.id
+                                    WHERE p.id > ?
+                                    ORDER BY p.id
+                                    LIMIT ?`, [offset, count]);
+    db.close();
+    res.send({
+      publications,
+      "next_offset": publications.slice(-1)[0]["id"]
+    });
   } catch (error) {
     next(error);
   }
