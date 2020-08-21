@@ -1,5 +1,5 @@
 /**
- * @fileoverview Entry point for the server running the Travelers in Egypt web app
+ * @fileoverview Entry point for the server running the Nile Travelogues web app
  */
 
 "use strict";
