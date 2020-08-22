@@ -10,6 +10,11 @@ const { handleError, HandleableError } = require("./helpers/errorhandler")
 const config = require("./config.json");
 
 const app = express();
+app.set("view engine", "ejs");
+
+app.get("/publications-list", function(req, res){
+  res.render("pages/publications-list");
+});
 
 /**
  * @api {get} /api/publications/:id Get publication information
@@ -117,6 +122,7 @@ async function getDB() {
 }
 
 app.use(function(err, req, res, next) {
+  console.log(err);
   handleError(err, res);
 });
 
