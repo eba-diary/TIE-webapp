@@ -12,6 +12,8 @@ const config = require("./config.json");
 const app = express();
 app.set("view engine", "ejs");
 
+app.use("/js", express.static("views/js"));
+
 app.get("/publications-list", function(req, res){
   res.render("pages/publications-list");
 });
