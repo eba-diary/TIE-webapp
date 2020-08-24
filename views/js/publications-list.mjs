@@ -37,8 +37,11 @@ function fetchPublications(offset) {
 function showPublications(publications) {
   let list = document.getElementById("publications");
   for (let publication of publications) {
-    let entry = document.createElement("li");
-    entry.textContent = publication.title;
+    let entry = document.getElementById("entry").content.cloneNode(true);
+    let fields = entry.querySelectorAll("dt, dd");
+    fields[0].textContent = publication.title;
+    fields[1].textContent = publication.name;
+    fields[2].textContent = publication.summary;
     list.appendChild(entry)
   }
 }

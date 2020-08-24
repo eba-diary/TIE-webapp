@@ -13,8 +13,16 @@
   </header>
   <main>
     <div>
-      <ul id="publications"></ul>
+      <dl id="publications"></dl>
       <button id="next">Load more</button>
+
+      <template id="entry">
+        <div>
+          <dt class="title"></dt>
+          <dd class="author"></dd>
+          <dd class="summary"></dd>
+        </div>
+      </template>
     </div>
   </main>
   <script type="module" src="js/publications-list.mjs"></script>
