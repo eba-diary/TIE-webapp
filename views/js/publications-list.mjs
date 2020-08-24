@@ -4,14 +4,30 @@
 "use strict";
 window.addEventListener("load", init);
 
+let nextOffset;
+
 /**
  * Initializes the page and fetches the first set of publications
  */
 function init() {
-  fetch("/api/publications")
+  let nextButton = document.getElementById("next");
+  nextButton.addEventListener("click", () => fetchPublications(nextOffset));
+  fetchPublications();
+}
+
+/**
+ * Fetches publications from the publications API
+ * @param {Number} offset pagination offset
+ */
+function fetchPublications(offset) {
+  if (offset === undefined) offset = 0;
+  fetch("/api/publications?offset=" + offset)
     .then(checkStatus)
     .then(res => res.json())
-    .then(json => showPublications(json.publications))
+    .then(json => {
+      nextOffset = json["next_offset"];
+      showPublications(json["publications"])
+    })
 }
 
 /**

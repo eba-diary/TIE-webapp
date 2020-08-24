@@ -8,9 +8,13 @@
 <body>
   <header>
     <%- include("../partials/header") %>
+    <h2>List of Publications</h2>
   </header>
   <main>
-    <ul id="publications"></ul>
+    <div>
+      <ul id="publications"></ul>
+      <button id="next">Load more</button>
+    </div>
   </main>
   <script type="module" src="js/publications-list.mjs"></script>
 </body>
