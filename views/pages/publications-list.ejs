@@ -6,7 +6,7 @@
   <title>Nile Travelogues - Publications list</title>
   <%- include("../partials/head") %>
 </head>
-<body>
+<body class="container">
   <header>
     <%- include("../partials/header") %>
     <h2>List of Publications</h2>
@@ -17,10 +17,12 @@
       <button id="next">Load more</button>
 
       <template id="entry">
-        <div>
-          <dt class="title"></dt>
-          <dd class="author"></dd>
-          <dd class="summary"></dd>
+        <div class="row">
+          <div class="col-sm-4">
+            <dt class="title"></dt>
+            <dd class="author"></dd>
+          </div>
+          <dd class="summary col-sm-8"></dd>
         </div>
       </template>
     </div>
