@@ -113,8 +113,8 @@ app.get("/api/publications/", async function(req, res, next){
  * @apiSuccess {String}   traveler.name                 Traveler name
  * @apiSuccess {String}   traveler.nationality          Traveler's nationality
  * @apiSuccess {Object[]} traveler.publications         List of this traveler's publications
- * @apiSuccess {Object[]} traveler.publications.id      Publication ID
- * @apiSuccess {Object[]} traveler.publications.title   Publication title
+ * @apiSuccess {Number}   traveler.publications.id      Publication ID
+ * @apiSuccess {String}   traveler.publications.title   Publication title
  */
 app.get("/api/travelers/", async function(req, res, next){
   //TODO: use the letter param
