@@ -103,6 +103,61 @@ app.get("/api/publications/", async function(req, res, next){
 });
 
 /**
+ * @api {get} /api/travelers/ Get a list of travelers and their publications
+ * @apiName GetTravelerList
+ * @apiGroup Travelers
+ * 
+ * @apiParam {String} [letter] Retrieve only travelers with names starting with this letter
+ * @apiSuccess {Object[]} traveler                      List of travelers
+ * @apiSuccess {String}   traveler.id                   Traveler ID
+ * @apiSuccess {String}   traveler.name                 Traveler name
+ * @apiSuccess {String}   traveler.nationality          Traveler's nationality
+ * @apiSuccess {Object[]} traveler.publications         List of this traveler's publications
+ * @apiSuccess {Object[]} traveler.publications.id      Publication ID
+ * @apiSuccess {Object[]} traveler.publications.title   Publication title
+ */
+app.get("/api/travelers/", async function(req, res, next){
+  //TODO: use the letter param
+  res.type("json");
+  try {
+    let db = await getDB();
+    let rows = await db.all(`SELECT t.id traveler_id, t.name, t.nationality,
+                              p.id publication_id, p.title
+                            FROM travelers t
+                            LEFT JOIN publications p
+                            ON t.id == p.traveler_id`);
+    db.close();
+    let travelers = {};
+    for (let row of rows) {
+      let travelerId = row["traveler_id"];
+      if (row["traveler_id"] in travelers) {
+        travelers[travelerId]["publications"].push({
+          id: row["publication_id"],
+          title: row["title"]
+        });
+      } else {
+        travelers[travelerId] = {
+          traveler_id: travelerId,
+          name: row["name"],
+          nationality: row["nationality"],
+          publications: []
+        };
+        if ("publication_id" in row) {
+          travelers[travelerId]["publications"].push({
+            id: row["publication_id"],
+            title: row["title"]
+          });
+        }
+      }
+    }
+    travelers = Object.values(travelers);
+    res.send(travelers);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
  * Parses a client-received parameter as an int, defaulting to a given value if undefined and
  * throwing an error if it's defined but not an int
  * @param {String} paramName    Name of the parameter
