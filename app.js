@@ -112,13 +112,13 @@ app.get("/api/publications/", async function(req, res, next){
  * @apiGroup Travelers
  * 
  * @apiParam {String} [letter] Retrieve only travelers with names starting with this letter
- * @apiSuccess {Object[]} traveler                      List of travelers
- * @apiSuccess {String}   traveler.id                   Traveler ID
- * @apiSuccess {String}   traveler.name                 Traveler name
- * @apiSuccess {String}   traveler.nationality          Traveler's nationality
- * @apiSuccess {Object[]} traveler.publications         List of this traveler's publications
- * @apiSuccess {Number}   traveler.publications.id      Publication ID
- * @apiSuccess {String}   traveler.publications.title   Publication title
+ * @apiSuccess {Object[]} travelers                      List of travelers
+ * @apiSuccess {String}   travelers.id                   Traveler ID
+ * @apiSuccess {String}   travelers.name                 Traveler name
+ * @apiSuccess {String}   travelers.nationality          Traveler's nationality
+ * @apiSuccess {Object[]} travelers.publications         List of this traveler's publications
+ * @apiSuccess {Number}   travelers.publications.id      Publication ID
+ * @apiSuccess {String}   travelers.publications.title   Publication title
  */
 app.get("/api/travelers/", async function(req, res, next){
   //TODO: use the letter param
