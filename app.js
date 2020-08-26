@@ -77,7 +77,7 @@ app.get("/api/publications/:id", async function(req, res, next){
  * @apiSuccess {String}   publications.title    Title
  * @apiSuccess {String}   publications.summary  Summary
  * @apiSuccess {String}   publications.traveler Traveler
- * @apiSuccess {Number}   next_offset           Next pagination offset
+ * @apiSuccess {Number}   next_offset           Next pagination offset. Null if there's none.
  */
 app.get("/api/publications/", async function(req, res, next){
   res.type("json");
@@ -95,7 +95,7 @@ app.get("/api/publications/", async function(req, res, next){
     db.close();
     res.send({
       publications,
-      "next_offset": publications.slice(-1)[0]["id"]
+      "next_offset": publications.length === 0 ? null : publications.slice(-1)[0]["id"]
     });
   } catch (error) {
     next(error);
