@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nile Travelogues - Publications by traveler</title>
+  <%- include("../partials/head") %>
+</head>
+<body class="container">
+  <header>
+    <%- include("../partials/header") %>
+    <h2>List of Publications by Traveler</h2>
+  </header>
+  <main>
+    <div>
+      <dl id="publications"></dl>
+      <template id="entry">
+        <div class="row">
+          <div class="col-sm-4">
+            <dt class="title"></dt>
+            <dd class="author"></dd>
+          </div>
+          <dd class="summary col-sm-8"></dd>
+        </div>
+      </template>
+    </div>
+  </main>
+  <footer>
+    <%- include("../partials/footer") %>
+  </footer>
+  <script type="module" src="js/travelers-list.mjs"></script>
+</body>
+</html>

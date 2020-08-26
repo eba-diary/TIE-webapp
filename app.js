@@ -19,6 +19,10 @@ app.get("/publications-list", function(req, res){
   res.render("pages/publications-list");
 });
 
+app.get("/travelers-list", function(req, res){
+  res.render("pages/travelers-list");
+});
+
 /**
  * @api {get} /api/publications/:id Get publication information
  * @apiName   GetPublication
