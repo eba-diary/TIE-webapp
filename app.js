@@ -107,7 +107,7 @@ app.get("/api/publications/", async function(req, res, next){
 });
 
 /**
- * @api {get} /api/travelers/ Get a list of travelers and their publications
+ * @api {get} /api/travelers/ Get a list of travelers and their publications in alphabetical order
  * @apiName GetTravelerList
  * @apiGroup Travelers
  * 
