@@ -1,6 +1,8 @@
 /**
  * @fileoverview publications-list.mjs gets and shows a list of travelers and their publications in the Travelogues DB
  */
+import checkStatus from "./check-status.mjs";
+
 "use strict";
 window.addEventListener("load", init);
 
@@ -31,14 +33,4 @@ function showTravelers(travelers) {
     }
     travelerList.appendChild(entry);
   }
-}
-
-/**
- * Checks if a fetch response is OK, throws otherwise
- * @param {Response} response fetch response
- * @returns {Response} fetch response
- */
-function checkStatus(response) {
-  if (response.ok) return response;
-  throw Error("Error in request: " + response.statusText)
 }
