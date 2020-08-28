@@ -5,12 +5,3 @@ dl > div {
 footer {
   margin-top: 1.5em;
 }
-
-details {
-  width: max-content;
-}
-
-details > summary {
-  text-transform: uppercase;
-  font-size: smaller;
-}
