@@ -1,0 +1,5 @@
+/* lists.css - styles for list of publications and pages like it */
+
+dl > div {
+  margin-bottom: 1.5em;
+}
