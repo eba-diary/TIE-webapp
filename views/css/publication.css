@@ -11,4 +11,9 @@ details > summary {
   width: max-content;
   text-transform: uppercase;
   font-size: smaller;
+  margin-bottom: 1em;
+}
+
+details > dl {
+  margin-left: 1em;
 }

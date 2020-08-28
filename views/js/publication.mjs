@@ -19,7 +19,16 @@ function init() {
 }
 
 function showPublication(publication) {
-  document.getElementById("title").innerHTML = publication["title"];
+  document.getElementById("title").textContent = publication["title"];
+  let moreInfoFields = ["travel_dates", "publisher", "publication_place", "publication_date",
+    "publisher_misc", "summary"];
+  for (let field of moreInfoFields) {
+    let display = document.getElementById(field.replace("_", "-"));
+    if (publication[field] !== null) {
+      display.textContent = publication[field];
+      display.parentNode.classList.remove("d-none");
+    }
+  }
   let iiifURL = publication["iiif"];
   Mirador.viewer({
     id: "mirador-viewer",
