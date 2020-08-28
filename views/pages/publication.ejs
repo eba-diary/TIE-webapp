@@ -4,19 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="css/mirador.css">
   <%- include("../partials/head") %>
 </head>
-<body class="container">
-  <header>
+<body>
+  <header class="container">
     <%- include("../partials/header") %>
     <h2 id="title"></h2>
     <details>
       <summary>Show more info</summary>
     </details>
   </header>
-  <footer>
+  <main>
+    <div id="mirador-viewer"></div>
+  </main>
+  <footer class="container">
     <%- include("../partials/footer") %>
   </footer>
+  <script src="https://unpkg.com/mirador@rc/dist/mirador.min.js"></script>
   <script type="module" src="js/check-status.mjs"></script>
   <script type="module" src="js/publication.mjs"></script>
 </body>
