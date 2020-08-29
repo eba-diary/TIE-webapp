@@ -20,6 +20,7 @@ function init() {
 
 function showPublication(publication) {
   document.getElementById("title").textContent = publication["title"];
+  document.title = "Nile Travelogues - " + publication["title"];
   let moreInfoFields = ["travel_dates", "publisher", "publication_place", "publication_date",
     "publisher_misc", "summary"];
   for (let field of moreInfoFields) {
