@@ -28,7 +28,10 @@ function showTravelers(travelers) {
     let pubList = entry.querySelector(".publications");
     for (let publication of traveler["publications"]) {
       let pubEntry = document.createElement("li");
-      pubEntry.textContent = publication["title"];
+      let link = document.createElement("a");
+      link.href = "/publication?id=" + publication["id"];
+      link.textContent = publication["title"];
+      pubEntry.append(link);
       pubList.append(pubEntry);
     }
     travelerList.appendChild(entry);
