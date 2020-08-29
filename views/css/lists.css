@@ -4,7 +4,12 @@ dl > div {
   margin-bottom: 1.5em;
 }
 
+#index {
+  padding-bottom: 1em;
+}
+
 .index-link {
-  margin: 0 1em;
-  background-color: lightgray;
+  margin: .1em .2em;
+  padding: 0 .5em;
+  background-color: gainsboro;
 }

@@ -1,5 +1,9 @@
 /* main.css - styles for the entire site */
 
+a {
+  color: #3d4d99 !important;
+}
+
 footer {
   margin-top: 1.5em;
 }
