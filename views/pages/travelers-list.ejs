@@ -13,22 +13,26 @@
     <h2>List of Publications by Traveler</h2>
   </header>
   <main>
-    <div>
-      <dl id="travelers"></dl>
-      <template id="entry">
-        <div class="row">
-          <div class="col-sm-4">
-            <dt class="author"></dt>
-            <dd class="nationality"></dd>
-          </div>
-          <div class="col-sm-8">
-            <dd>
-              <ul class="publications"></ul>
-            </dd>
-          </div>
+    <nav id="index" class="d-flex justify-content-center"></nav>
+    <template id="index-link">
+      <div class="index-link">
+        <a></a>
+      </div>
+    </template>
+    <dl id="travelers"></dl>
+    <template id="entry">
+      <div class="row">
+        <div class="col-sm-4">
+          <dt class="author"></dt>
+          <dd class="nationality"></dd>
         </div>
-      </template>
-    </div>
+        <div class="col-sm-8">
+          <dd>
+            <ul class="publications"></ul>
+          </dd>
+        </div>
+      </div>
+    </template>
   </main>
   <footer>
     <%- include("../partials/footer") %>

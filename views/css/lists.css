@@ -3,3 +3,8 @@
 dl > div {
   margin-bottom: 1.5em;
 }
+
+.index-link {
+  margin: 0 1em;
+  background-color: lightgray;
+}
