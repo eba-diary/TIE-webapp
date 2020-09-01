@@ -106,7 +106,6 @@ app.get("/api/publications/", async function(req, res, next){
  * @apiName GetTravelerList
  * @apiGroup Travelers
  * 
- * @apiParam {String} [letter] Retrieve only travelers with names starting with this letter
  * @apiSuccess {Object[]} travelers                      List of travelers
  * @apiSuccess {String}   travelers.id                   Traveler ID
  * @apiSuccess {String}   travelers.name                 Traveler name
@@ -116,7 +115,6 @@ app.get("/api/publications/", async function(req, res, next){
  * @apiSuccess {String}   travelers.publications.title   Publication title
  */
 app.get("/api/travelers/", async function(req, res, next){
-  //TODO: use the letter param
   res.type("json");
   try {
     let db = await getDB();
