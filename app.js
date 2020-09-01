@@ -15,6 +15,10 @@ app.set("view engine", "ejs");
 app.use("/js", express.static("views/js"));
 app.use("/css", express.static("views/css"));
 
+app.get("/", function(req, res){
+  res.render("pages/home");
+});
+
 app.get("/publications-list", function(req, res){
   res.render("pages/publications-list");
 });
