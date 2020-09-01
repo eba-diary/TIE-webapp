@@ -92,7 +92,8 @@ app.get("/api/publications/", async function(req, res, next){
                                     FROM publications p
                                     INNER JOIN travelers t
                                     ON p.traveler_id == t.id
-                                    ORDER BY p.id`);
+                                    ORDER BY p.title
+                                    COLLATE NOCASE ASC`);
     db.close();
     res.send(publications);
   } catch (error) {
