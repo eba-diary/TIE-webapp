@@ -32,10 +32,10 @@ function showPublications(publications) {
   let list = document.getElementById("publications");
   for (let publication of publications) {
     let entry = document.getElementById("entry").content.cloneNode(true);
-    let fields = entry.querySelectorAll("dt, dd");
-    fields[0].textContent = publication.title;
-    fields[1].textContent = publication.name;
-    fields[2].textContent = publication.summary;
+    entry.querySelector(".title").textContent = publication.title;
+    entry.querySelector(".title").href = "/publication?id=" + publication.id;
+    entry.querySelector(".author").textContent = publication.traveler_name;
+    entry.querySelector(".summary").textContent = publication.summary;
     list.appendChild(entry)
   }
 }

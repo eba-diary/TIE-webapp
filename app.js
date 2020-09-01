@@ -78,17 +78,19 @@ app.get("/api/publications/:id", async function(req, res, next){
  * @apiName   GetPublicationList
  * @apiGroup  Publications
  * 
- * @apiSuccess {Object[]} publications          List of publications
- * @apiSuccess {Number}   publications.id       Publication ID
- * @apiSuccess {String}   publications.title    Title
- * @apiSuccess {String}   publications.summary  Summary
- * @apiSuccess {String}   publications.traveler Traveler
+ * @apiSuccess {Object[]} publications                List of publications
+ * @apiSuccess {Number}   publications.id             Publication ID
+ * @apiSuccess {String}   publications.title          Title
+ * @apiSuccess {String}   publications.summary        Summary
+ * @apiSuccess {String}   publications.traveler_id    Traveler ID
+ * @apiSuccess {String}   publications.traveler_name  Traveler name
  */
 app.get("/api/publications/", async function(req, res, next){
   res.type("json");
   try{
     let db = await getDB();
-    let publications = await db.all(`SELECT p.id, p.title, p.summary, t.name
+    let publications = await db.all(`SELECT p.id, p.title, p.summary, t.name traveler_name,
+                                      t.id traveler_id
                                     FROM publications p
                                     INNER JOIN travelers t
                                     ON p.traveler_id == t.id
