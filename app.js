@@ -178,4 +178,8 @@ app.use(function(err, req, res, next) {
   handleError(err, res);
 });
 
+app.use(function (req, res) {
+  res.status(404).render("pages/404");
+})
+
 app.listen(process.env.PORT || config["port"]);
