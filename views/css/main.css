@@ -1,7 +1,7 @@
 /* main.css - styles for the entire site */
 
-a {
-  color: #3d4d99 !important;
+main a, footer a {
+  color: #3d4d99;
 }
 
 footer {
