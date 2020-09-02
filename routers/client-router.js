@@ -17,6 +17,10 @@ const PAGES = [
 router.use("/js", express.static("views/js"));
 router.use("/css", express.static("views/css"));
 
+router.get("/", function(req, res){
+  res.render("pages/home");
+});
+
 router.get("/:page", function(req, res){
   if (PAGES.includes(req.params.page)) {
     res.render("pages/" + req.params.page);
