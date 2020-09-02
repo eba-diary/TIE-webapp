@@ -13,7 +13,7 @@ const config = require("./config.json");
 const app = express();
 app.set("view engine", "ejs");
 
-app.use("/", clientRouter)
+app.use("/", clientRouter);
 
 /**
  * @api {get} /api/publications/:id Get publication information
