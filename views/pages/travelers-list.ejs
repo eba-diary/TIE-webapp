@@ -7,12 +7,12 @@
   <link rel="stylesheet" href="css/lists.css">
   <%- include("../partials/head") %>
 </head>
-<body class="container">
+<body>
   <header>
     <%- include("../partials/header") %>
-    <h2>List of Publications by Traveler</h2>
+    <h2 class="container">List of Publications by Traveler</h2>
   </header>
-  <main>
+  <main class="container">
     <nav id="index" class="d-flex flex-wrap justify-content-center"></nav>
     <template id="index-link">
       <div class="index-link">
@@ -34,9 +34,7 @@
       </div>
     </template>
   </main>
-  <footer>
-    <%- include("../partials/footer") %>
-  </footer>
+  <%- include("../partials/footer") %>
   <script type="module" src="js/check-status.mjs"></script>
   <script type="module" src="js/travelers-list.mjs"></script>
 </body>

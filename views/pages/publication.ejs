@@ -8,45 +8,45 @@
   <%- include("../partials/head") %>
 </head>
 <body>
-  <header class="container">
+  <header>
     <%- include("../partials/header") %>
-    <h2 id="title"></h2>
-    <details>
-      <summary>Show more info</summary>
-      <dl>
-        <div class="row d-none">
-          <dt class="col-sm-3">Travel dates</dt>
-          <dd class="col-sm-9" id="travel-dates"></dd>
-        </div>
-        <div class="row d-none">
-          <dt class="col-sm-3">Publisher</dt>
-          <dd class="col-sm-9" id="publisher"></dd>
-        </div>
-        <div class="row d-none">
-          <dt class="col-sm-3">Place of publication</dt>
-          <dd class="col-sm-9" id="publication-place"></dd>
-        </div>
-        <div class="row d-none">
-          <dt class="col-sm-3">Publication date</dt>
-          <dd class="col-sm-9" id="publication-date"></dd>
-        </div>
-        <div class="row d-none">
-          <dt class="col-sm-3">Misc. publisher info</dt>
-          <dd class="col-sm-9" id="publisher-misc"></dd>
-        </div>
-        <div class="row d-none">
-          <dt class="col-sm-3">Summary</dt>
-          <dd class="col-sm-9" id="summary"></dd>
-        </div>
-      </dl>
-    </details>
+    <div class="container">
+      <h2 id="title"></h2>
+      <details>
+        <summary>Show more info</summary>
+        <dl>
+          <div class="row d-none">
+            <dt class="col-sm-3">Travel dates</dt>
+            <dd class="col-sm-9" id="travel-dates"></dd>
+          </div>
+          <div class="row d-none">
+            <dt class="col-sm-3">Publisher</dt>
+            <dd class="col-sm-9" id="publisher"></dd>
+          </div>
+          <div class="row d-none">
+            <dt class="col-sm-3">Place of publication</dt>
+            <dd class="col-sm-9" id="publication-place"></dd>
+          </div>
+          <div class="row d-none">
+            <dt class="col-sm-3">Publication date</dt>
+            <dd class="col-sm-9" id="publication-date"></dd>
+          </div>
+          <div class="row d-none">
+            <dt class="col-sm-3">Misc. publisher info</dt>
+            <dd class="col-sm-9" id="publisher-misc"></dd>
+          </div>
+          <div class="row d-none">
+            <dt class="col-sm-3">Summary</dt>
+            <dd class="col-sm-9" id="summary"></dd>
+          </div>
+        </dl>
+      </details>
+    </div>
   </header>
   <main>
     <div id="mirador-viewer"></div>
   </main>
-  <footer class="container">
-    <%- include("../partials/footer") %>
-  </footer>
+  <%- include("../partials/footer") %>
   <script src="https://unpkg.com/mirador@rc/dist/mirador.min.js"></script>
   <script type="module" src="js/check-status.mjs"></script>
   <script type="module" src="js/publication.mjs"></script>
