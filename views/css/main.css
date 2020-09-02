@@ -7,3 +7,7 @@ main a, footer a {
 footer {
   margin-top: 1.5em;
 }
+
+nav {
+  margin-bottom: 1em;
+}
