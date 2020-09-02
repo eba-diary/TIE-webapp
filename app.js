@@ -7,29 +7,13 @@ const sqlite3 = require("sqlite3");
 const sqlite = require("sqlite");
 const express = require("express");
 const { handleError, HandleableError } = require("./helpers/errorhandler")
+const clientRouter = require("./routers/client-router");
 const config = require("./config.json");
 
 const app = express();
 app.set("view engine", "ejs");
 
-app.use("/js", express.static("views/js"));
-app.use("/css", express.static("views/css"));
-
-app.get("/", function(req, res){
-  res.render("pages/home");
-});
-
-app.get("/publications-list", function(req, res){
-  res.render("pages/publications-list");
-});
-
-app.get("/travelers-list", function(req, res){
-  res.render("pages/travelers-list");
-});
-
-app.get("/publication", function(req, res){
-  res.render("pages/publication");
-});
+app.use("/", clientRouter)
 
 /**
  * @api {get} /api/publications/:id Get publication information
