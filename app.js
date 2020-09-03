@@ -151,6 +151,27 @@ app.get("/api/travelers/", async function(req, res, next){
   }
 });
 
+/**
+ * @api {get} /api/search/ Get a list of publications that match the search criteria
+ * @apiName Search
+ * @apiGroup Publications
+ * 
+ * @apiParam {String} [title]         Match titles that contain this string
+ * @apiParam {String} [traveler]      Match travelers that contain this string
+ * @apiParam {String} [nationality]   Match travelers with this nationality
+ * @apiSuccess {Object[]} publications          List of publications matching search criteria
+ * @apiSuccess {String}   publications.title    Publication title
+ * @apiSuccess {String}   publications.traveler Traveler name
+ */
+app.get("/api/search", async function(req, res, next) {
+  res.type("json");
+  try {
+    let db = await getDB();
+  } catch (error) {
+    next(error);
+  }
+});
+
 async function getDB() {
   return await sqlite.open({
     filename: config["db_filename"],
