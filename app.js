@@ -79,15 +79,32 @@ app.get("/api/publications/", async function(req, res, next){
   res.type("json");
   try{
     let db = await getDB();
-    let publications = await db.all(`SELECT p.id, p.title, p.summary, t.name traveler_name,
-                                      t.id traveler_id
-                                    FROM publications p
-                                    INNER JOIN travelers t
-                                    ON p.traveler_id == t.id
-                                    ORDER BY p.title
-                                    COLLATE NOCASE ASC`);
+    let rows = await db.all(`SELECT p.id, p.title, p.summary, t.id traveler_id,
+                              t.name traveler_name, c.type contribution_type
+                            FROM contributions c
+                            INNER JOIN publications p ON p.id = c.publication_id
+                            INNER JOIN travelers t on t.id = c.traveler_id
+                            ORDER BY p.title
+                            COLLATE NOCASE ASC`);
     db.close();
-    res.send(publications);
+    let publications = new Map();
+    for (let publication of rows) {
+      let traveler = {
+        id: publication.traveler_id,
+        name: publication.traveler_name,
+        type: publication.contribution_type
+      };
+      if (publications.has(publication.id)) {
+        publications.get(publication.id).travelers.push(traveler);
+      } else {
+        publication.travelers = [traveler];
+        delete publication.traveler_id;
+        delete publication.traveler_name;
+        delete publication.contribution_type;
+        publications.set(publication.id, publication)
+      }
+    }
+    res.send(Array.from(publications.values()));
   } catch (error) {
     next(error);
   }
