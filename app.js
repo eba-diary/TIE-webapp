@@ -31,9 +31,12 @@ app.use("/", clientRouter);
  * @apiSuccess {String} summary               Summary of the publication
  * @apiSuccess {String} url                   Internet Archive URL
  * @apiSuccess {String} iiif                  IIIF manifest URL
- * @apiSuccess {Object} traveler              Traveler information
+ * @apiSuccess {Object} travelers[]           Info on each contributing traveler to the publciation
+ * @apiSuccess {Object} traveler.id           Traveler id
  * @apiSuccess {Object} traveler.name         Traveler name
  * @apiSuccess {Object} traveler.nationality  Traveler's nationality
+ * @apiSuccess {Object} traveler.gender  Traveler's nationality
+ * @apiSuccess {Object} traveler.type         Type of traveler's contribution to the publication
  */
 app.get("/api/publications/:id", async function(req, res, next){
   res.type("json");
@@ -41,19 +44,18 @@ app.get("/api/publications/:id", async function(req, res, next){
     let publicationId = req.params["id"];
     let db = await getDB();
     let info = await db.get(`SELECT p.id, p.title, p.travel_dates, p.publisher, p.publication_place,
-                        p.publication_date, p.publisher_misc, p.summary, p.url, p.iiif, t.name,
-                        t.nationality
-                      FROM publications p
-                      INNER JOIN travelers t
-                      ON p.traveler_id == t.id
-                      WHERE p.id == ?`, [publicationId]);
+                              p.publication_date, p.publisher_misc, p.summary, p.url, p.iiif
+                            FROM contributions c
+                            INNER JOIN publications p ON p.id = c.publication_id
+                            WHERE p.id = ?`, [publicationId]);
+    let contributors = await db.all(`SELECT t.id, t.name, t.gender, c.type FROM contributions c
+                                    INNER JOIN travelers t ON t.id = c.traveler_id
+                                    WHERE c.publication_id = ?`, [publicationId])
     db.close();
     if (info === undefined) {
       throw new HandleableError(404, `Publication ID ${publicationId} doesn't exist`);
     } else {
-      info.traveler = {name: info.name, nationality: info.nationality}
-      delete info.name;
-      delete info.nationality;
+      info.contributors = contributors;
       res.send(info);
     }
   } catch (error) {
