@@ -31,7 +31,7 @@ app.use("/", clientRouter);
  * @apiSuccess {String}   summary               Summary of the publication
  * @apiSuccess {String}   url                   Internet Archive URL
  * @apiSuccess {String}   iiif                  IIIF manifest URL
- * @apiSuccess {Object[]} traveler[]            Info on each contributing traveler to the publciation
+ * @apiSuccess {Object[]} travelers             Info on each contributing traveler to the publciation
  * @apiSuccess {Number}   traveler.id           Traveler id
  * @apiSuccess {String}   traveler.name         Traveler name
  * @apiSuccess {String}   traveler.nationality  Traveler's nationality
