@@ -32,11 +32,11 @@ app.use("/", clientRouter);
  * @apiSuccess {String}   url                   Internet Archive URL
  * @apiSuccess {String}   iiif                  IIIF manifest URL
  * @apiSuccess {Object[]} travelers             Info on each contributing traveler to the publciation
- * @apiSuccess {Number}   traveler.id           Traveler id
- * @apiSuccess {String}   traveler.name         Traveler name
- * @apiSuccess {String}   traveler.nationality  Traveler's nationality
- * @apiSuccess {String}   traveler.gender       Traveler's nationality
- * @apiSuccess {String}   traveler.type         Type of traveler's contribution to the publication
+ * @apiSuccess {Number}   travelers.id          Traveler id
+ * @apiSuccess {String}   travelers.name        Traveler name
+ * @apiSuccess {String}   travelers.nationality Traveler's nationality
+ * @apiSuccess {String}   travelers.gender      Traveler's nationality
+ * @apiSuccess {String}   travelers.type        Type of traveler's contribution to the publication
  */
 app.get("/api/publications/:id", async function(req, res, next){
   res.type("json");
