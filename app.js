@@ -68,12 +68,14 @@ app.get("/api/publications/:id", async function(req, res, next){
  * @apiName   GetPublicationList
  * @apiGroup  Publications
  * 
- * @apiSuccess {Object[]} publications                List of publications
- * @apiSuccess {Number}   publications.id             Publication ID
- * @apiSuccess {String}   publications.title          Title
- * @apiSuccess {String}   publications.summary        Summary
- * @apiSuccess {String}   publications.traveler_id    Traveler ID
- * @apiSuccess {String}   publications.traveler_name  Traveler name
+ * @apiSuccess {Object[]} publications            List of publications
+ * @apiSuccess {Number}   publications.id         Publication ID
+ * @apiSuccess {String}   publications.title      Title
+ * @apiSuccess {String}   publications.summary    Summary
+ * @apiSuccess {Object[]} publications.travelers  Traveler ID
+ * @apiSuccess {String}   travelers.id            Traveler id
+ * @apiSuccess {String}   travelers.name          Traveler name
+ * @apiSuccess {String}   travelers.type          Type of contribution traveler made to publication
  */
 app.get("/api/publications/", async function(req, res, next){
   res.type("json");
