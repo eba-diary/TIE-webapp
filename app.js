@@ -117,56 +117,45 @@ app.get("/api/publications/", async function(req, res, next){
  * @apiName GetTravelerList
  * @apiGroup Travelers
  * 
- * @apiSuccess {Object[]} travelers                      List of travelers
- * @apiSuccess {String}   travelers.id                   Traveler ID
- * @apiSuccess {String}   travelers.name                 Traveler name
- * @apiSuccess {String}   travelers.nationality          Traveler's nationality
- * @apiSuccess {Object[]} travelers.publications         List of this traveler's publications
- * @apiSuccess {Number}   travelers.publications.id      Publication ID
- * @apiSuccess {String}   travelers.publications.title   Publication title
+ * @apiSuccess {Object[]} travelers                   List of travelers
+ * @apiSuccess {String}   travelers.id                Traveler ID
+ * @apiSuccess {String}   travelers.name              Traveler name
+ * @apiSuccess {String}   travelers.nationality       Traveler's nationality
+ * @apiSuccess {Object[]} travelers.publications      List of this traveler's publications
+ * @apiSuccess {Number}   publications.id             Publication ID
+ * @apiSuccess {String}   publications.title          Publication title
+ * @apiSuccess {String}   publications.contribution   Type of contribution traveler made to the publication
  */
 app.get("/api/travelers/", async function(req, res, next){
   res.type("json");
   try {
     let db = await getDB();
-    let rows = await db.all(`SELECT t.id traveler_id, t.name, t.nationality,
-                              p.id publication_id, p.title
+    let rows = await db.all(`SELECT t.id, t.name, t.nationality,
+                              c.type contribution_type, p.id publication_id,
+                              p.title publication_title
                             FROM travelers t
-                            LEFT JOIN publications p
-                            ON t.id == p.traveler_id`);
+                            LEFT JOIN contributions c ON t.id == c.traveler_id
+                            INNER JOIN publications p ON c.publication_id == p.id
+                            ORDER BY name COLLATE NOCASE ASC`);
     db.close();
-    let travelers = {};
-    for (let row of rows) {
-      let travelerId = row["traveler_id"];
-      if (row["traveler_id"] in travelers) {
-        travelers[travelerId]["publications"].push({
-          id: row["publication_id"],
-          title: row["title"]
-        });
+    let travelers = new Map();
+    for (let traveler of rows) {
+      let publication = {
+        id: traveler.publication_id,
+        title: traveler.publication_title,
+        contribution: traveler.contribution_type
+      };
+      if (travelers.has(traveler.id)) {
+        travelers.get(traveler.id).publications.push(publication);
       } else {
-        travelers[travelerId] = {
-          traveler_id: travelerId,
-          name: row["name"],
-          nationality: row["nationality"],
-          publications: []
-        };
-        if ("publication_id" in row) {
-          travelers[travelerId]["publications"].push({
-            id: row["publication_id"],
-            title: row["title"]
-          });
-        }
+        traveler.publications = [publication];
+        delete traveler.publication_id;
+        delete traveler.publication_title;
+        delete traveler.contribution_type;
+        travelers.set(traveler.id, traveler)
       }
     }
-    travelers = Object.values(travelers);
-    travelers.sort(function(a, b) {
-      let nameA = a.name.toUpperCase();
-      let nameB = b.name.toUpperCase();
-      if (nameA < nameB) return -1
-      if (nameA > nameB) return 1
-      return 0;
-    });
-    res.send(travelers);
+    res.send(Array.from(travelers.values()));
   } catch (error) {
     next(error);
   }
