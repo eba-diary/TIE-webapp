@@ -166,8 +166,8 @@ app.get("/api/travelers/", async function(req, res, next){
  * @apiName Search
  * @apiGroup Publications
  * 
- * @apiParam {String} [title]         Match titles that contain this string
- * @apiParam {String} [traveler]      Match travelers that contain this string
+ * @apiParam {String} [title]         Match titles that contain all words in this string
+ * @apiParam {String} [traveler]      Match travelers that contain all names in this string
  * @apiParam {String} [nationality]   Match travelers with this nationality
  * @apiSuccess {Object[]} publications          List of publications matching search criteria
  * @apiSuccess {String}   publications.title    Publication title
