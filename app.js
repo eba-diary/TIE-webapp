@@ -177,6 +177,13 @@ app.get("/api/search", async function(req, res, next) {
   res.type("json");
   try {
     let db = await getDB();
+    /* The following rows that contain something like
+      WHERE $title IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title)
+      is an evil hack that replaces the much cleaner
+      WHERE $TITLE IS NULL OR title MATCH $title
+      which I am unable to use because of a weird sqlite bug. The hack comes from here:
+      http://sqlite.1065341.n5.nabble.com/FTS3-bug-with-MATCH-plus-OR-td50714.html
+    */
     let matches = await db.all(`SELECT publication_id, title, summary, name
                                 FROM contributions c
                                 INNER JOIN (
