@@ -188,24 +188,37 @@ app.get("/api/search", async function(req, res, next) {
                                 FROM contributions c
                                 INNER JOIN (
                                     SELECT rowid, * FROM publicationsfts
-                                    WHERE $title IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title)
+                                    WHERE ($title IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title))
+                                      AND ($summary IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE summary MATCH $summary))
                                   ) pubftsmatches
                                   ON pubftsmatches.rowid = c.publication_id
                                 INNER JOIN (
                                     SELECT rowid, * FROM travelersfts
-                                    WHERE $traveler IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler)
+                                    WHERE ($traveler IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler))
+                                      AND ($nationality IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE nationality MATCH $nationality))
                                   ) travftsmatches
                                   ON travftsmatches.rowid = c.traveler_id
                                 ORDER BY title COLLATE NOCASE ASC`,
                                 {
-                                  $title: req.query["title"] == "" ? undefined : req.query["title"],
-                                  $traveler: req.query["traveler"] == "" ? undefined: req.query["traveler"]
+                                  $title: undefinedIfEmptyString(req.query["title"]),
+                                  $summary: undefinedIfEmptyString(req.query["summary"]),
+                                  $traveler: undefinedIfEmptyString(req.query["traveler"]),
+                                  $nationality: undefinedIfEmptyString(req.query["nationality"])
                                 });
     res.send(matches);
   } catch (error) {
     next(error);
   }
 });
+
+/**
+ * Returns undefined if the input is an empty string, otherwise returns the string
+ * @param {String} string String to check for if its empty
+ * @return {undefined|String} input string, or undefined if it was empty
+ */
+function undefinedIfEmptyString(string) {
+  return string == "" ? undefined : string;
+}
 
 async function getDB() {
   return await sqlite.open({
