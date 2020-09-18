@@ -198,8 +198,8 @@ app.get("/api/search", async function(req, res, next) {
                                   ON travftsmatches.rowid = c.traveler_id
                                 ORDER BY title COLLATE NOCASE ASC`,
                                 {
-                                  $title: req.query["title"],
-                                  $traveler: req.query["traveler"]
+                                  $title: req.query["title"] == "" ? undefined : req.query["title"],
+                                  $traveler: req.query["traveler"] == "" ? undefined: req.query["traveler"]
                                 });
     res.send(matches);
   } catch (error) {
