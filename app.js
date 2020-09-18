@@ -177,16 +177,22 @@ app.get("/api/search", async function(req, res, next) {
   res.type("json");
   try {
     let db = await getDB();
-    let matches = await db.all(`SELECT p.id, p.title, t.name traveler_name, t.id traveler_id
-                                FROM publications p
-                                INNER JOIN travelers t
-                                ON p.traveler_id == t.id
-                                WHERE ($title IS NULL OR p.title LIKE $titlelike)
-                                ORDER BY p.title
-                                COLLATE NOCASE ASC`,
+    let matches = await db.all(`SELECT publication_id, title, summary, name
+                                FROM contributions c
+                                INNER JOIN (
+                                    SELECT rowid, * FROM publicationsfts
+                                    WHERE $title IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title)
+                                  ) pubftsmatches
+                                  ON pubftsmatches.rowid = c.publication_id
+                                INNER JOIN (
+                                    SELECT rowid, * FROM travelersfts
+                                    WHERE $traveler IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler)
+                                  ) travftsmatches
+                                  ON travftsmatches.rowid = c.traveler_id
+                                ORDER BY title COLLATE NOCASE ASC`,
                                 {
                                   $title: req.query["title"],
-                                  $titlelike: `%${req.query["title"]}%`
+                                  $traveler: req.query["traveler"]
                                 });
     res.send(matches);
   } catch (error) {
