@@ -170,9 +170,12 @@ app.get("/api/travelers/", async function(req, res, next){
  * @apiParam {String} [summary]       Match summaries that contain all words in this string
  * @apiParam {String} [traveler]      Match travelers that contain all names in this string
  * @apiParam {String} [nationality]   Match travelers with this nationality
- * @apiSuccess {Object[]} publications          List of publications matching search criteria
- * @apiSuccess {String}   publications.title    Publication title
- * @apiSuccess {String}   publications.traveler Traveler name
+ * @apiSuccess {Object[]} publications            List of publications matching search criteria
+ * @apiSuccess {String}   publications.title      Publication title
+ * @apiSuccess {Object[]} publications.travelers  List of travelers contributing the publication
+ * @apiSuccess {Number}   travelers.id            Traveler ID
+ * @apiSuccess {String}   travelers.name          Traveler name
+ * @apiSuccess {String}   travelers.type            Type of contribution made
  */
 app.get("/api/search", async function(req, res, next) {
   res.type("json");
@@ -185,16 +188,17 @@ app.get("/api/search", async function(req, res, next) {
       which I am unable to use because of a weird sqlite bug. The hack comes from here:
       http://sqlite.1065341.n5.nabble.com/FTS3-bug-with-MATCH-plus-OR-td50714.html
     */
-    let matches = await db.all(`SELECT publication_id, title, summary, name
+    let matches = await db.all(`SELECT publication_id id, title, summary, name traveler_name,
+                                  traveler_id, type contribution_type
                                 FROM contributions c
                                 INNER JOIN (
-                                    SELECT rowid, * FROM publicationsfts
+                                    SELECT rowid, title, summary FROM publicationsfts
                                     WHERE ($title IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title))
                                       AND ($summary IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE summary MATCH $summary))
                                   ) pubftsmatches
                                   ON pubftsmatches.rowid = c.publication_id
                                 INNER JOIN (
-                                    SELECT rowid, * FROM travelersfts
+                                    SELECT rowid, name FROM travelersfts
                                     WHERE ($traveler IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler))
                                       AND ($nationality IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE nationality MATCH $nationality))
                                   ) travftsmatches
@@ -206,7 +210,25 @@ app.get("/api/search", async function(req, res, next) {
                                   $traveler: undefinedIfEmptyString(req.query["traveler"]),
                                   $nationality: undefinedIfEmptyString(req.query["nationality"])
                                 });
-    res.send(matches);
+                                console.log(matches)
+    let publications = new Map();
+    for (let publication of matches) {
+      let traveler = {
+        id: publication.traveler_id,
+        name: publication.traveler_name,
+        type: publication.contribution_type
+      };
+      if (publications.has(publication.id)) {
+        publications.get(publication.id).travelers.push(traveler);
+      } else {
+        publication.travelers = [traveler];
+        delete publication.traveler_id;
+        delete publication.traveler_name;
+        delete publication.contribution_type;
+        publications.set(publication.id, publication)
+      }
+    }
+    res.send(Array.from(publications.values()));
   } catch (error) {
     next(error);
   }
