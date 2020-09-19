@@ -11,3 +11,9 @@ footer {
 nav {
   margin-bottom: 1em;
 }
+
+.plain-authorlist {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0
+}
