@@ -30,8 +30,7 @@ function showPublication(publication) {
       display.parentNode.classList.remove("d-none");
     }
   }
-  for (let contributor of publication["contributors"]) {
-    console.log(contributor)
+  for (let contributor of publication["travelers"]) {
     let authorList = document.getElementById("authors");
     let author = document.createElement("li");
     let nameDisplay = contributor.name +

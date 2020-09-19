@@ -55,7 +55,7 @@ app.get("/api/publications/:id", async function(req, res, next){
     if (info === undefined) {
       throw new HandleableError(404, `Publication ID ${publicationId} doesn't exist`);
     } else {
-      info.contributors = contributors;
+      info.travelers = contributors;
       res.send(info);
     }
   } catch (error) {
