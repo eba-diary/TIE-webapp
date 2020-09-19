@@ -30,6 +30,14 @@ function showPublication(publication) {
       display.parentNode.classList.remove("d-none");
     }
   }
+  for (let contributor of publication["travelers"]) {
+    let authorList = document.getElementById("authors");
+    let author = document.createElement("li");
+    let nameDisplay = contributor.name +
+      (contributor.type === "Author" ? "" : ` (${contributor.type})`);
+    author.textContent = nameDisplay;
+    authorList.appendChild(author);
+  }
   let iiifURL = publication["iiif"];
   Mirador.viewer({
     id: "mirador-viewer",

@@ -21,19 +21,22 @@ app.use("/", clientRouter);
  * @apiGroup  Publications
  * 
  * @apiParam {Number} id Publication's unique ID
- * @apiSuccess {Number} id                    Publication ID
- * @apiSuccess {String} title                 Publication title
- * @apiSuccess {String} travel_dates          Date or date range of travel
- * @apiSuccess {String} publisher             Publisher name
- * @apiSuccess {String} publication_place     Place of publication
- * @apiSuccess {String} publication_date      Date of publication
- * @apiSuccess {String} publisher_misc        Miscellaneous publication info
- * @apiSuccess {String} summary               Summary of the publication
- * @apiSuccess {String} url                   Internet Archive URL
- * @apiSuccess {String} iiif                  IIIF manifest URL
- * @apiSuccess {Object} traveler              Traveler information
- * @apiSuccess {Object} traveler.name         Traveler name
- * @apiSuccess {Object} traveler.nationality  Traveler's nationality
+ * @apiSuccess {Number}   id                    Publication ID
+ * @apiSuccess {String}   title                 Publication title
+ * @apiSuccess {String}   travel_dates          Date or date range of travel
+ * @apiSuccess {String}   publisher             Publisher name
+ * @apiSuccess {String}   publication_place     Place of publication
+ * @apiSuccess {String}   publication_date      Date of publication
+ * @apiSuccess {String}   publisher_misc        Miscellaneous publication info
+ * @apiSuccess {String}   summary               Summary of the publication
+ * @apiSuccess {String}   url                   Internet Archive URL
+ * @apiSuccess {String}   iiif                  IIIF manifest URL
+ * @apiSuccess {Object[]} travelers             Info on each contributing traveler to the publciation
+ * @apiSuccess {Number}   travelers.id          Traveler id
+ * @apiSuccess {String}   travelers.name        Traveler name
+ * @apiSuccess {String}   travelers.nationality Traveler's nationality
+ * @apiSuccess {String}   travelers.gender      Traveler's nationality
+ * @apiSuccess {String}   travelers.type        Type of traveler's contribution to the publication
  */
 app.get("/api/publications/:id", async function(req, res, next){
   res.type("json");
@@ -41,19 +44,18 @@ app.get("/api/publications/:id", async function(req, res, next){
     let publicationId = req.params["id"];
     let db = await getDB();
     let info = await db.get(`SELECT p.id, p.title, p.travel_dates, p.publisher, p.publication_place,
-                        p.publication_date, p.publisher_misc, p.summary, p.url, p.iiif, t.name,
-                        t.nationality
-                      FROM publications p
-                      INNER JOIN travelers t
-                      ON p.traveler_id == t.id
-                      WHERE p.id == ?`, [publicationId]);
+                              p.publication_date, p.publisher_misc, p.summary, p.url, p.iiif
+                            FROM contributions c
+                            INNER JOIN publications p ON p.id = c.publication_id
+                            WHERE p.id = ?`, [publicationId]);
+    let contributors = await db.all(`SELECT t.id, t.name, t.gender, c.type FROM contributions c
+                                    INNER JOIN travelers t ON t.id = c.traveler_id
+                                    WHERE c.publication_id = ?`, [publicationId])
     db.close();
     if (info === undefined) {
       throw new HandleableError(404, `Publication ID ${publicationId} doesn't exist`);
     } else {
-      info.traveler = {name: info.name, nationality: info.nationality}
-      delete info.name;
-      delete info.nationality;
+      info.travelers = contributors;
       res.send(info);
     }
   } catch (error) {
@@ -66,26 +68,45 @@ app.get("/api/publications/:id", async function(req, res, next){
  * @apiName   GetPublicationList
  * @apiGroup  Publications
  * 
- * @apiSuccess {Object[]} publications                List of publications
- * @apiSuccess {Number}   publications.id             Publication ID
- * @apiSuccess {String}   publications.title          Title
- * @apiSuccess {String}   publications.summary        Summary
- * @apiSuccess {String}   publications.traveler_id    Traveler ID
- * @apiSuccess {String}   publications.traveler_name  Traveler name
+ * @apiSuccess {Object[]} publications            List of publications
+ * @apiSuccess {Number}   publications.id         Publication ID
+ * @apiSuccess {String}   publications.title      Title
+ * @apiSuccess {String}   publications.summary    Summary
+ * @apiSuccess {Object[]} publications.travelers  Traveler ID
+ * @apiSuccess {String}   travelers.id            Traveler id
+ * @apiSuccess {String}   travelers.name          Traveler name
+ * @apiSuccess {String}   travelers.type          Type of contribution traveler made to publication
  */
 app.get("/api/publications/", async function(req, res, next){
   res.type("json");
   try{
     let db = await getDB();
-    let publications = await db.all(`SELECT p.id, p.title, p.summary, t.name traveler_name,
-                                      t.id traveler_id
-                                    FROM publications p
-                                    INNER JOIN travelers t
-                                    ON p.traveler_id == t.id
-                                    ORDER BY p.title
-                                    COLLATE NOCASE ASC`);
+    let rows = await db.all(`SELECT p.id, p.title, p.summary, t.id traveler_id,
+                              t.name traveler_name, c.type contribution_type
+                            FROM contributions c
+                            INNER JOIN publications p ON p.id = c.publication_id
+                            INNER JOIN travelers t on t.id = c.traveler_id
+                            ORDER BY p.title
+                            COLLATE NOCASE ASC`);
     db.close();
-    res.send(publications);
+    let publications = new Map();
+    for (let publication of rows) {
+      let traveler = {
+        id: publication.traveler_id,
+        name: publication.traveler_name,
+        type: publication.contribution_type
+      };
+      if (publications.has(publication.id)) {
+        publications.get(publication.id).travelers.push(traveler);
+      } else {
+        publication.travelers = [traveler];
+        delete publication.traveler_id;
+        delete publication.traveler_name;
+        delete publication.contribution_type;
+        publications.set(publication.id, publication)
+      }
+    }
+    res.send(Array.from(publications.values()));
   } catch (error) {
     next(error);
   }
@@ -96,56 +117,45 @@ app.get("/api/publications/", async function(req, res, next){
  * @apiName GetTravelerList
  * @apiGroup Travelers
  * 
- * @apiSuccess {Object[]} travelers                      List of travelers
- * @apiSuccess {String}   travelers.id                   Traveler ID
- * @apiSuccess {String}   travelers.name                 Traveler name
- * @apiSuccess {String}   travelers.nationality          Traveler's nationality
- * @apiSuccess {Object[]} travelers.publications         List of this traveler's publications
- * @apiSuccess {Number}   travelers.publications.id      Publication ID
- * @apiSuccess {String}   travelers.publications.title   Publication title
+ * @apiSuccess {Object[]} travelers                   List of travelers
+ * @apiSuccess {String}   travelers.id                Traveler ID
+ * @apiSuccess {String}   travelers.name              Traveler name
+ * @apiSuccess {String}   travelers.nationality       Traveler's nationality
+ * @apiSuccess {Object[]} travelers.publications      List of this traveler's publications
+ * @apiSuccess {Number}   publications.id             Publication ID
+ * @apiSuccess {String}   publications.title          Publication title
+ * @apiSuccess {String}   publications.contribution   Type of contribution traveler made to the publication
  */
 app.get("/api/travelers/", async function(req, res, next){
   res.type("json");
   try {
     let db = await getDB();
-    let rows = await db.all(`SELECT t.id traveler_id, t.name, t.nationality,
-                              p.id publication_id, p.title
+    let rows = await db.all(`SELECT t.id, t.name, t.nationality,
+                              c.type contribution_type, p.id publication_id,
+                              p.title publication_title
                             FROM travelers t
-                            LEFT JOIN publications p
-                            ON t.id == p.traveler_id`);
+                            LEFT JOIN contributions c ON t.id == c.traveler_id
+                            INNER JOIN publications p ON c.publication_id == p.id
+                            ORDER BY name COLLATE NOCASE ASC`);
     db.close();
-    let travelers = {};
-    for (let row of rows) {
-      let travelerId = row["traveler_id"];
-      if (row["traveler_id"] in travelers) {
-        travelers[travelerId]["publications"].push({
-          id: row["publication_id"],
-          title: row["title"]
-        });
+    let travelers = new Map();
+    for (let traveler of rows) {
+      let publication = {
+        id: traveler.publication_id,
+        title: traveler.publication_title,
+        contribution: traveler.contribution_type
+      };
+      if (travelers.has(traveler.id)) {
+        travelers.get(traveler.id).publications.push(publication);
       } else {
-        travelers[travelerId] = {
-          traveler_id: travelerId,
-          name: row["name"],
-          nationality: row["nationality"],
-          publications: []
-        };
-        if ("publication_id" in row) {
-          travelers[travelerId]["publications"].push({
-            id: row["publication_id"],
-            title: row["title"]
-          });
-        }
+        traveler.publications = [publication];
+        delete traveler.publication_id;
+        delete traveler.publication_title;
+        delete traveler.contribution_type;
+        travelers.set(traveler.id, traveler)
       }
     }
-    travelers = Object.values(travelers);
-    travelers.sort(function(a, b) {
-      let nameA = a.name.toUpperCase();
-      let nameB = b.name.toUpperCase();
-      if (nameA < nameB) return -1
-      if (nameA > nameB) return 1
-      return 0;
-    });
-    res.send(travelers);
+    res.send(Array.from(travelers.values()));
   } catch (error) {
     next(error);
   }
@@ -156,33 +166,82 @@ app.get("/api/travelers/", async function(req, res, next){
  * @apiName Search
  * @apiGroup Publications
  * 
- * @apiParam {String} [title]         Match titles that contain this string
- * @apiParam {String} [traveler]      Match travelers that contain this string
+ * @apiParam {String} [title]         Match titles that contain all words in this string
+ * @apiParam {String} [summary]       Match summaries that contain all words in this string
+ * @apiParam {String} [traveler]      Match travelers that contain all names in this string
  * @apiParam {String} [nationality]   Match travelers with this nationality
- * @apiSuccess {Object[]} publications          List of publications matching search criteria
- * @apiSuccess {String}   publications.title    Publication title
- * @apiSuccess {String}   publications.traveler Traveler name
+ * @apiSuccess {Object[]} publications            List of publications matching search criteria
+ * @apiSuccess {String}   publications.title      Publication title
+ * @apiSuccess {Object[]} publications.travelers  List of travelers contributing the publication
+ * @apiSuccess {Number}   travelers.id            Traveler ID
+ * @apiSuccess {String}   travelers.name          Traveler name
+ * @apiSuccess {String}   travelers.type            Type of contribution made
  */
 app.get("/api/search", async function(req, res, next) {
   res.type("json");
   try {
     let db = await getDB();
-    let matches = await db.all(`SELECT p.id, p.title, t.name traveler_name, t.id traveler_id
-                                FROM publications p
-                                INNER JOIN travelers t
-                                ON p.traveler_id == t.id
-                                WHERE ($title IS NULL OR p.title LIKE $titlelike)
-                                ORDER BY p.title
-                                COLLATE NOCASE ASC`,
+    /* The following rows that contain something like
+      WHERE $title IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title)
+      is an evil hack that replaces the much cleaner
+      WHERE $TITLE IS NULL OR title MATCH $title
+      which I am unable to use because of a weird sqlite bug. The hack comes from here:
+      http://sqlite.1065341.n5.nabble.com/FTS3-bug-with-MATCH-plus-OR-td50714.html
+    */
+    let matches = await db.all(`SELECT publication_id id, title, summary, name traveler_name,
+                                  traveler_id, type contribution_type
+                                FROM contributions c
+                                INNER JOIN (
+                                    SELECT rowid, title, summary FROM publicationsfts
+                                    WHERE ($title IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title))
+                                      AND ($summary IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE summary MATCH $summary))
+                                  ) pubftsmatches
+                                  ON pubftsmatches.rowid = c.publication_id
+                                INNER JOIN (
+                                    SELECT rowid, name FROM travelersfts
+                                    WHERE ($traveler IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler))
+                                      AND ($nationality IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE nationality MATCH $nationality))
+                                  ) travftsmatches
+                                  ON travftsmatches.rowid = c.traveler_id
+                                ORDER BY title COLLATE NOCASE ASC`,
                                 {
-                                  $title: req.query["title"],
-                                  $titlelike: `%${req.query["title"]}%`
+                                  $title: undefinedIfEmptyString(req.query["title"]),
+                                  $summary: undefinedIfEmptyString(req.query["summary"]),
+                                  $traveler: undefinedIfEmptyString(req.query["traveler"]),
+                                  $nationality: undefinedIfEmptyString(req.query["nationality"])
                                 });
-    res.send(matches);
+                                console.log(matches)
+    let publications = new Map();
+    for (let publication of matches) {
+      let traveler = {
+        id: publication.traveler_id,
+        name: publication.traveler_name,
+        type: publication.contribution_type
+      };
+      if (publications.has(publication.id)) {
+        publications.get(publication.id).travelers.push(traveler);
+      } else {
+        publication.travelers = [traveler];
+        delete publication.traveler_id;
+        delete publication.traveler_name;
+        delete publication.contribution_type;
+        publications.set(publication.id, publication)
+      }
+    }
+    res.send(Array.from(publications.values()));
   } catch (error) {
     next(error);
   }
 });
+
+/**
+ * Returns undefined if the input is an empty string, otherwise returns the string
+ * @param {String} string String to check for if its empty
+ * @return {undefined|String} input string, or undefined if it was empty
+ */
+function undefinedIfEmptyString(string) {
+  return string == "" ? undefined : string;
+}
 
 async function getDB() {
   return await sqlite.open({

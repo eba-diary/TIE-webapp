@@ -34,8 +34,15 @@ function showPublications(publications) {
     let entry = document.getElementById("entry").content.cloneNode(true);
     entry.querySelector(".title").textContent = publication.title;
     entry.querySelector(".title").href = "/publication?id=" + publication.id;
-    entry.querySelector(".author").textContent = publication.traveler_name;
     entry.querySelector(".summary").textContent = publication.summary;
+    let authorList = entry.querySelector(".author");
+    for (let contributor of publication.travelers) {
+      if (contributor.type === "Author") {
+        let author = document.createElement("li");
+        author.textContent = contributor.name;
+        authorList.appendChild(author);
+      }
+    }
     list.appendChild(entry)
   }
 }
