@@ -13,3 +13,8 @@ dl > div {
   padding: 0 .5em;
   background-color: gainsboro;
 }
+
+.plain-authorlist {
+  list-style: none;
+  padding-left: 0;
+}

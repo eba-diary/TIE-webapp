@@ -17,8 +17,3 @@ details > summary {
 details > dl {
   margin-left: 1em;
 }
-
-#authors {
-  list-style: none;
-  padding-left: 0;
-}
