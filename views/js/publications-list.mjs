@@ -30,8 +30,17 @@ function fetchPublications() {
  */
 function showPublications(publications) {
   let list = document.getElementById("publications");
+  let indexedLetters = [];
   for (let publication of publications) {
+    let firstLetter = publication.title.charAt(0).toUpperCase();
+    let injectAnchorID = false;
+    if (!indexedLetters.includes(firstLetter)) {
+      indexedLetters.push(firstLetter);
+      injectAnchorID = true;
+    }
+
     let entry = document.getElementById("entry").content.cloneNode(true);
+    if (injectAnchorID) entry.querySelector(".title").id = "startswith-" + firstLetter;
     entry.querySelector(".title").textContent = publication.title;
     entry.querySelector(".title").href = "/publication?id=" + publication.id;
     entry.querySelector(".summary").textContent = publication.summary;
@@ -44,5 +53,12 @@ function showPublications(publications) {
       }
     }
     list.appendChild(entry)
+  }
+  for (let letter of indexedLetters) {
+    let anchor = document.createElement("a");
+    anchor.textContent = letter;
+    anchor.href = "#startswith-" + letter;
+    anchor.classList.add("index-link");
+    document.getElementById("index").appendChild(anchor)
   }
 }
