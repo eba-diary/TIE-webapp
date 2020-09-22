@@ -1,0 +1,12 @@
+label {
+  margin-bottom: 0 !important;
+}
+
+form > div {
+  margin: 1em;
+  align-items: center;
+}
+
+.checkbox-container > div {
+  margin-right: 1em;
+}
