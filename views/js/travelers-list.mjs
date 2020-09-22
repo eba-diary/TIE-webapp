@@ -46,10 +46,10 @@ function showTravelers(travelers) {
     travelerList.appendChild(entry);
   }
   for (let letter of indexedLetters) {
-    let indexLink = document.getElementById("index-link").content.cloneNode(true);
-    let anchor = indexLink.querySelector("a");
+    let anchor = document.createElement("a");
     anchor.textContent = letter;
     anchor.href = "#startswith-" + letter;
-    document.getElementById("index").appendChild(indexLink)
+    anchor.classList.add("index-link");
+    document.getElementById("index").appendChild(anchor)
   }
 }

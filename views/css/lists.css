@@ -12,4 +12,5 @@ dl > div {
   margin: .1em .2em;
   padding: 0 .5em;
   background-color: gainsboro;
+  font-family: monospace;
 }
