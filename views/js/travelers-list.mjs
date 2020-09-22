@@ -23,7 +23,7 @@ function showTravelers(travelers) {
   let travelerList = document.getElementById("travelers");
   let indexedLetters = [];
   for (let traveler of travelers) {
-    let firstLetter = traveler["name"].charAt(0);
+    let firstLetter = traveler["name"].charAt(0).toUpperCase();
     let injectAnchorID = false;
     if (!indexedLetters.includes(firstLetter)) {
       indexedLetters.push(firstLetter);
