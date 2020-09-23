@@ -2,7 +2,7 @@ label {
   margin-bottom: 0 !important;
 }
 
-form > div {
+form > div, details > div {
   margin: 1em;
   align-items: center;
 }

@@ -20,54 +20,57 @@
           placeholder="(contains)">
       </div>
       <div class="row">
-        <label for="author" class="col-sm-2">Author</label>
-        <input type="text" class="form-control col-sm-10" id="author" name="author"
-          placeholder="(contains)">
+          <label for="author" class="col-sm-2">Author</label>
+          <input type="text" class="form-control col-sm-10" id="author" name="author"
+            placeholder="(contains)">
       </div>
-      <div class="row">
-        <label for="author" class="col-sm-2">Summary</label>
-        <input type="text" class="form-control col-sm-10" id="summary" name="summary"
-          placeholder="(contains)">
-      </div>
-      <div class="row">
-        <span class="col-sm-2">Author roles</span>
-        <div class="col-sm-10 align-items-baseline d-flex checkbox-container" id="author-roles">
-          <!-- author role checkboxes are populated with JS -->
-          <template id="role">
-            <div>
-              <input type="checkbox" checked>
-              <label></label>
-            </div>
-          </template>
+      <details>
+        <summary>More search options</summary>
+        <div class="row">
+          <label for="summary" class="col-sm-2">Summary</label>
+          <input type="text" class="form-control col-sm-10" id="summary" name="summary"
+            placeholder="(contains)">
         </div>
-      </div>
-      <div class="row">
-        <span class="col-sm-2">Travel dates</span>
-        <div class="col-sm-10 traveldate-control">
-          Between
-          <input type="number" id="traveldate-min" name="traveldate-min" value="1850">
-          and
-          <input type="number" id="traveldate-max" name="traveldate-max" value="1950">
-          <div class="d-inline">
-            <input type="checkbox" id="include-unknown" name="include-unknown">
-            <label for="include-unknown">Include publications with unknown end date</label>
+        <div class="row">
+          <span class="col-sm-2">Author roles</span>
+          <div class="col-sm-10 align-items-baseline d-flex checkbox-container" id="author-roles">
+            <!-- author role checkboxes are populated with JS -->
+            <template id="role">
+              <div>
+                <input type="checkbox" checked>
+                <label></label>
+              </div>
+            </template>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <label for="gender" class="col-sm-2">Gender</label>
-        <select id="gender" name="gender">
-          <option value="">Any</option>
-          <!-- additional gender options are populated with JS -->
-        </select>
-      </div>
-      <div class="row">
-        <label for="nationality" class="col-sm-2">Nationality</label>
-        <select id="nationality" name="nationality">
-          <option value="">Any</option>
-          <!-- additional nationality options are populated with JS -->
-        </select>
-      </div>
+        <div class="row">
+          <span class="col-sm-2">Travel dates</span>
+          <div class="col-sm-10 traveldate-control">
+            Between
+            <input type="number" id="traveldate-min" name="traveldate-min" value="1850">
+            and
+            <input type="number" id="traveldate-max" name="traveldate-max" value="1950">
+            <div class="d-inline">
+              <input type="checkbox" id="include-unknown" name="include-unknown">
+              <label for="include-unknown">Include publications with unknown end date</label>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <label for="gender" class="col-sm-2">Gender</label>
+          <select id="gender" name="gender">
+            <option value="">Any</option>
+            <!-- additional gender options are populated with JS -->
+          </select>
+        </div>
+        <div class="row">
+          <label for="nationality" class="col-sm-2">Nationality</label>
+          <select id="nationality" name="nationality">
+            <option value="">Any</option>
+            <!-- additional nationality options are populated with JS -->
+          </select>
+        </div>
+      </details>
     </form>
   </main>
   <%- include("../partials/footer") %>
