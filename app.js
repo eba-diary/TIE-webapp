@@ -174,9 +174,12 @@ app.get("/api/searchpagedata", async function(req, res, next) {
   res.type("json");
   try {
     let db = await getDB();
-    let author_roles = await db.all("SELECT DISTINCT type FROM contributions");
-    let genders = await db.all("SELECT DISTINCT gender FROM travelers");
-    let nationalities = await db.all("SELECT DISTINCT REPLACE(nationality, '(?)', '') FROM travelers");
+    let author_roles = await db.all(
+      "SELECT DISTINCT type FROM contributions ORDER BY type COLLATE NOCASE");
+    let genders = await db.all(
+      "SELECT DISTINCT gender FROM travelers ORDER BY gender COLLATE NOCASE ASC");
+    let nationalities = await db.all(
+      "SELECT DISTINCT REPLACE(nationality, '(?)', '') n FROM travelers ORDER BY n COLLATE NOCASE");
     res.send({
       author_roles: regularizeUnknowns(flattenDBResult(author_roles)),
       genders: regularizeUnknowns(flattenDBResult(genders)),
