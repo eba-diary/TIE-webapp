@@ -10,3 +10,12 @@ form > div {
 .checkbox-container > div {
   margin-right: 1em;
 }
+
+.traveldate-control {
+  padding-left: 0 !important;
+}
+
+.traveldate-control > input {
+  margin: 0 .5em;
+  width: 8em;
+}
