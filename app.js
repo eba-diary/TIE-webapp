@@ -167,8 +167,8 @@ app.get("/api/travelers/", async function(req, res, next){
  * @apiGroup SearchPage
  * 
  * @apiSuccess {String[]} author_roles  List of contribution types/author roles
- * @apiSuccess {String[]} gender        List of genders
- * @apiSuccess {String[]} nationality   List of nationalities
+ * @apiSuccess {String[]} genders       List of genders
+ * @apiSuccess {String[]} nationalities List of nationalities
  */
 app.get("/api/searchpagedata", async function(req, res, next) {
 
