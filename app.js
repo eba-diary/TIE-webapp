@@ -210,7 +210,6 @@ app.get("/api/search", async function(req, res, next) {
                                   $traveler: undefinedIfEmptyString(req.query["traveler"]),
                                   $nationality: undefinedIfEmptyString(req.query["nationality"])
                                 });
-                                console.log(matches)
     let publications = new Map();
     for (let publication of matches) {
       let traveler = {
