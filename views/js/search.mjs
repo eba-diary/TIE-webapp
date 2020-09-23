@@ -31,4 +31,22 @@ function populateSearchForm(data) {
     label.setAttribute("for", roleId)
     document.getElementById("author-roles").appendChild(role);
   }
+
+  populateDropdowns("gender", data["genders"]);
+  populateDropdowns("nationality", data["nationalities"]);
+}
+
+/**
+ * Add options from an array to a dropdown
+ * @param dropdownId {String} ID of the dropdown to add options to
+ * @param options {String[]} options to add
+ */
+function populateDropdowns(dropdownId, options) {
+  let dropdown = document.getElementById(dropdownId);
+  for (let optionName of options) {
+    let option = document.createElement("option");
+    option.value = optionName;
+    option.textContent = optionName;
+    dropdown.appendChild(option);
+  }
 }

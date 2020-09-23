@@ -11,7 +11,7 @@ form > div, details > div {
   margin-right: 1em;
 }
 
-.traveldate-control {
+.traveldate-control, #author-roles {
   padding-left: 0 !important;
 }
 
