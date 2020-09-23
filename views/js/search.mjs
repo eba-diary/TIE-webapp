@@ -21,8 +21,14 @@ function init() {
  */
 function populateSearchForm(data) {
   for (let roleName of data["author_roles"]) {
+    let roleId = "role-" + roleName.toLowerCase();
     let role = document.getElementById("role").content.cloneNode(true);
-    role.querySelector("label").textContent = roleName;
+    let checkbox = role.querySelector("input");
+    checkbox.id = roleId;
+    checkbox.name = roleId;
+    let label = role.querySelector("label")
+    label.textContent = roleName;
+    label.setAttribute("for", roleId)
     document.getElementById("author-roles").appendChild(role);
   }
 }
