@@ -162,6 +162,19 @@ app.get("/api/travelers/", async function(req, res, next){
 });
 
 /**
+ * @api {get} /api/searchpagedata Get data used to populate advanced options of search
+ * @apiname SearchPageData
+ * @apiGroup SearchPage
+ * 
+ * @apiSuccess {String[]} author_roles  List of contribution types/author roles
+ * @apiSuccess {String[]} Gender        List of genders
+ * @apiSuccess {String[]} Nationality   List of nationalities
+ */
+app.get("/api/searchpagedata", async function(req, res, next) {
+
+});
+
+/**
  * @api {get} /api/search/ Get a list of publications that match the search criteria
  * @apiName Search
  * @apiGroup Publications
