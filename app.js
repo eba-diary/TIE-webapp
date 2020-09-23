@@ -171,7 +171,20 @@ app.get("/api/travelers/", async function(req, res, next){
  * @apiSuccess {String[]} nationalities List of nationalities
  */
 app.get("/api/searchpagedata", async function(req, res, next) {
-
+  res.type("json");
+  try {
+    let db = await getDB();
+    let author_roles = await db.all("SELECT DISTINCT type FROM contributions");
+    let genders = await db.all("SELECT DISTINCT gender FROM travelers");
+    let nationalities = await db.all("SELECT DISTINCT REPLACE(nationality, '(?)', '') FROM travelers");
+    res.send({
+      author_roles: regularizeUnknowns(flattenDBResult(author_roles)),
+      genders: regularizeUnknowns(flattenDBResult(genders)),
+      nationalities: regularizeUnknowns(flattenDBResult(nationalities))
+    });
+  } catch (error) {
+    next(error);
+  }
 });
 
 /**
@@ -254,6 +267,30 @@ app.get("/api/search", async function(req, res, next) {
 function undefinedIfEmptyString(string) {
   return string == "" ? undefined : string;
 }
+
+/**
+ * Flattens a DB result array so that it only contains value
+ * @param {Object[]} array Array recieved from DB query
+ * @returns {Object[]} Flattened array
+ */
+function flattenDBResult(array) {
+  let out = [];
+  array.forEach(item => out.push(Object.values(item)[0]));
+  return out;
+}
+
+/**
+ * Replaces unknown values in an array with a single "UNKNOWN" value
+ * Not guaranteed to return values in the same order
+ * @param {(null|String)[]} string Array of "UNKNOWN" (case insensitive), null, and other values
+ * @return {String[]} Same array, but with unknown values replaced with a single "UNKNOWN"
+ */
+function regularizeUnknowns(array) {
+  array = array.map(
+    string => (string === null || string.toUpperCase() === "UNKNOWN") ? "UNKNOWN" : string);
+  return [...new Set(array)]; // removes duplicates
+}
+
 
 async function getDB() {
   return await sqlite.open({
