@@ -58,11 +58,6 @@ function populateDropdowns(dropdownId, options) {
  * @param searchParams {URLSearchParams} URL search params for publication search
  */
 function getSearchResults(searchParams) {
-  ["gender", "nationality"].forEach(param => {
-    if (searchParams.get(param) === "UNKNOWN") {
-      searchParams.set(param, null)
-    }
-  });
   fetch("/api/search?" + searchParams.toString())
     .then(checkStatus)
     .then(res => res.json())

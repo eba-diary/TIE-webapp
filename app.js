@@ -181,9 +181,9 @@ app.get("/api/searchpagedata", async function(req, res, next) {
     let nationalities = await db.all(
       "SELECT DISTINCT REPLACE(nationality, '(?)', '') n FROM travelers ORDER BY n COLLATE NOCASE");
     res.send({
-      author_roles: regularizeUnknowns(flattenDBResult(author_roles)),
-      genders: regularizeUnknowns(flattenDBResult(genders)),
-      nationalities: regularizeUnknowns(flattenDBResult(nationalities))
+      author_roles: removeNulls(flattenDBResult(author_roles)),
+      genders: removeNulls(flattenDBResult(genders)),
+      nationalities: removeNulls(flattenDBResult(nationalities))
     });
   } catch (error) {
     next(error);
@@ -195,10 +195,15 @@ app.get("/api/searchpagedata", async function(req, res, next) {
  * @apiName Search
  * @apiGroup Publications
  * 
- * @apiParam {String} [title]         Match titles that contain all words in this string
- * @apiParam {String} [summary]       Match summaries that contain all words in this string
- * @apiParam {String} [traveler]      Match travelers that contain all names in this string
- * @apiParam {String} [nationality]   Match travelers with this nationality
+ * @apiParam {String} [title]           Match titles that contain all words in this string
+ * @apiParam {String} [summary]         Match summaries that contain all words in this string
+ * @apiParam {String} [traveldate-min]  Match publications detailing travels on or after this year
+ * @apiParam {String} [traveldate-max]  Match publications detailing travels on or before this year
+ * @apiParam {String} [include-unknown] Match publications with unknown end travel date
+ * @apiParam {String} [traveler]        Match travelers that contain all names in this string
+ * @apiParam {String} [nationality]     Match travelers with this nationality
+ * @apiParam {String} [gender]          Match travelers with this gender
+ * @apiParam {String[]} [role]          Match travelers with these roles
  * @apiSuccess {Object[]} publications            List of publications matching search criteria
  * @apiSuccess {String}   publications.title      Publication title
  * @apiSuccess {Object[]} publications.travelers  List of travelers contributing the publication
@@ -218,7 +223,7 @@ app.get("/api/search", async function(req, res, next) {
       http://sqlite.1065341.n5.nabble.com/FTS3-bug-with-MATCH-plus-OR-td50714.html
     */
     let matches = await db.all(
-      ` SELECT publication_id id, title, travel_dates, name traveler_name, gender,
+      ` SELECT publication_id id, title, travel_dates, name traveler_name,
           traveler_id, type contribution_type, travel_year_min, travel_year_max
         FROM contributions c
         INNER JOIN (
@@ -245,6 +250,8 @@ app.get("/api/search", async function(req, res, next) {
         });
     let publications = new Map();
     for (let publication of matches) {
+      //TODO: come up with a system that excludes non-matching dates but includes unknown end dates ONLY IF requested
+      //TODO: also the name, gender, nationality, and roles of the contributor must line up.
       let traveler = {
         id: publication.traveler_id,
         name: publication.traveler_name,
@@ -287,15 +294,12 @@ function flattenDBResult(array) {
 }
 
 /**
- * Replaces unknown values in an array with a single "UNKNOWN" value
- * Not guaranteed to return values in the same order
- * @param {(null|String)[]} string Array of "UNKNOWN" (case insensitive), null, and other values
- * @return {String[]} Same array, but with unknown values replaced with a single "UNKNOWN"
+ * Removes nulls from an array
+ * @param {(null|Object)[]} string Array of null and other values
+ * @return {Object[]} Same array, but with no null values
  */
-function regularizeUnknowns(array) {
-  array = array.map(
-    string => (string === null || string.toUpperCase() === "UNKNOWN") ? "UNKNOWN" : string);
-  return [...new Set(array)]; // removes duplicates
+function removeNulls(array) {
+  return array.filter(value => value !== null);
 }
 
 
