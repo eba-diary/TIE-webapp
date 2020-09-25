@@ -19,3 +19,7 @@ form > div, details > div {
   margin: 0 .5em;
   width: 8em;
 }
+
+.search-btn {
+  margin-top: 1em;
+}
