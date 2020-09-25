@@ -217,28 +217,32 @@ app.get("/api/search", async function(req, res, next) {
       which I am unable to use because of a weird sqlite bug. The hack comes from here:
       http://sqlite.1065341.n5.nabble.com/FTS3-bug-with-MATCH-plus-OR-td50714.html
     */
-    let matches = await db.all(`SELECT publication_id id, title, summary, name traveler_name,
-                                  traveler_id, type contribution_type
-                                FROM contributions c
-                                INNER JOIN (
-                                    SELECT rowid, title, summary FROM publicationsfts
-                                    WHERE ($title IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title))
-                                      AND ($summary IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE summary MATCH $summary))
-                                  ) pubftsmatches
-                                  ON pubftsmatches.rowid = c.publication_id
-                                INNER JOIN (
-                                    SELECT rowid, name FROM travelersfts
-                                    WHERE ($traveler IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler))
-                                      AND ($nationality IS NULL OR rowid IN (SELECT rowid FROM travelersfts WHERE nationality MATCH $nationality))
-                                  ) travftsmatches
-                                  ON travftsmatches.rowid = c.traveler_id
-                                ORDER BY title COLLATE NOCASE ASC`,
-                                {
-                                  $title: undefinedIfEmptyString(req.query["title"]),
-                                  $summary: undefinedIfEmptyString(req.query["summary"]),
-                                  $traveler: undefinedIfEmptyString(req.query["traveler"]),
-                                  $nationality: undefinedIfEmptyString(req.query["nationality"])
-                                });
+    let matches = await db.all(
+      ` SELECT publication_id id, title, travel_dates, name traveler_name, gender,
+          traveler_id, type contribution_type, travel_year_min, travel_year_max
+        FROM contributions c
+        INNER JOIN (
+          SELECT pfts.rowid, p.title, p.travel_dates, p.travel_year_min, p.travel_year_max
+          FROM publicationsfts pfts
+          INNER JOIN publications p ON pfts.rowid = p.id
+          WHERE ($title IS NULL OR pfts.rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title))
+            AND ($summary IS NULL OR pfts.rowid IN (SELECT rowid FROM publicationsfts WHERE summary MATCH $summary))
+          ) pubftsmatches
+          ON pubftsmatches.rowid = c.publication_id
+        INNER JOIN (
+          SELECT tfts.rowid, t.name, t.gender FROM travelersfts tfts
+          INNER JOIN travelers t ON tfts.rowid = t.id
+          WHERE ($traveler IS NULL OR tfts.rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler))
+            AND ($nationality IS NULL OR tfts.rowid IN (SELECT rowid FROM travelersfts WHERE nationality MATCH $nationality))
+          ) travftsmatches
+          ON travftsmatches.rowid = c.traveler_id
+        ORDER BY title COLLATE NOCASE ASC`,
+        {
+          $title: undefinedIfEmptyString(req.query["title"]),
+          $summary: undefinedIfEmptyString(req.query["summary"]),
+          $traveler: undefinedIfEmptyString(req.query["traveler"]),
+          $nationality: undefinedIfEmptyString(req.query["nationality"])
+        });
     let publications = new Map();
     for (let publication of matches) {
       let traveler = {
