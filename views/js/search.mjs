@@ -13,6 +13,7 @@ function init() {
     .then(checkStatus)
     .then(res => res.json())
     .then(data => populateSearchForm(data));
+  getSearchResults((new URL(document.location)).searchParams);
 }
 
 /**
@@ -25,7 +26,8 @@ function populateSearchForm(data) {
     let role = document.getElementById("role").content.cloneNode(true);
     let checkbox = role.querySelector("input");
     checkbox.id = roleId;
-    checkbox.name = roleId;
+    checkbox.name = "role";
+    checkbox.value = roleName;
     let label = role.querySelector("label")
     label.textContent = roleName;
     label.setAttribute("for", roleId)
@@ -49,4 +51,20 @@ function populateDropdowns(dropdownId, options) {
     option.textContent = optionName;
     dropdown.appendChild(option);
   }
+}
+
+/**
+ * Get search results
+ * @param searchParams {URLSearchParams} URL search params for publication search
+ */
+function getSearchResults(searchParams) {
+  ["gender", "nationality"].forEach(param => {
+    if (searchParams.get(param) === "UNKNOWN") {
+      searchParams.set(param, null)
+    }
+  });
+  fetch("/api/search?" + searchParams.toString())
+    .then(checkStatus)
+    .then(res => res.json())
+    .then(json => console.log(json)) //TODO: actually display results
 }
