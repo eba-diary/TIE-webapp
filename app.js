@@ -268,9 +268,8 @@ app.get("/api/search", async function(req, res, next) {
           publications.get(publication.id).travelers.push(traveler);
         } else {
           publication.travelers = [traveler];
-          delete publication.traveler_id;
-          delete publication.traveler_name;
-          delete publication.contribution_type;
+          ["traveler_id", "traveler_name", "contribution_type",
+            "travel_year_min", "travel_year_max"].forEach(prop => delete publication[prop])
           publications.set(publication.id, publication)
         }
       }
