@@ -39,6 +39,20 @@
           </div>
         </div>
         <div class="row">
+          <label for="gender" class="col-sm-2">Gender</label>
+          <select id="gender" name="gender">
+            <option value="">Any</option>
+            <!-- additional gender options are populated with JS -->
+          </select>
+        </div>
+        <div class="row">
+          <label for="nationality" class="col-sm-2">Nationality</label>
+          <select id="nationality" name="nationality">
+            <option value="">Any</option>
+            <!-- additional nationality options are populated with JS -->
+          </select>
+        </div>
+        <div class="row">
           <label for="summary" class="col-sm-2">Summary</label>
           <input type="text" class="form-control col-sm-10" id="summary" name="summary"
             placeholder="(contains)">
@@ -55,20 +69,6 @@
               <label for="include-unknown">Include publications with unknown end date</label>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <label for="gender" class="col-sm-2">Gender</label>
-          <select id="gender" name="gender">
-            <option value="">Any</option>
-            <!-- additional gender options are populated with JS -->
-          </select>
-        </div>
-        <div class="row">
-          <label for="nationality" class="col-sm-2">Nationality</label>
-          <select id="nationality" name="nationality">
-            <option value="">Any</option>
-            <!-- additional nationality options are populated with JS -->
-          </select>
         </div>
       </details>
       <input id="search-btn" type="submit" value="Search">
