@@ -199,7 +199,7 @@ app.get("/api/searchpagedata", async function(req, res, next) {
  * @apiParam {String} [summary]         Match summaries that contain all words in this string
  * @apiParam {String} [traveldate-min]  Match publications detailing travels on or after this year
  * @apiParam {String} [traveldate-max]  Match publications detailing travels on or before this year
- * @apiParam {String} [include-unknown] Match publications with unknown end travel date
+ * @apiParam {String} [include-unknown] Match publications with unknown end travel date; "on" if yes
  * @apiParam {String} [traveler]        Match travelers that contain all names in this string
  * @apiParam {String} [nationality]     Match travelers with this nationality
  * @apiParam {String} [gender]          Match travelers with this gender
@@ -254,21 +254,25 @@ app.get("/api/search", async function(req, res, next) {
           $role: undefinedIfEmptyString(req.query["role"])
         });
     let publications = new Map();
+    let search_min = undefinedIfEmptyString(req.query["traveldate-min"]);
+    let search_max = undefinedIfEmptyString(req.query["traveldate-max"]);
+    let include_unknown = req.query["include-unknown"] === "on";
     for (let publication of matches) {
-      //TODO: come up with a system that excludes non-matching dates but includes unknown end dates ONLY IF requested
-      let traveler = {
-        id: publication.traveler_id,
-        name: publication.traveler_name,
-        type: publication.contribution_type
-      };
-      if (publications.has(publication.id)) {
-        publications.get(publication.id).travelers.push(traveler);
-      } else {
-        publication.travelers = [traveler];
-        delete publication.traveler_id;
-        delete publication.traveler_name;
-        delete publication.contribution_type;
-        publications.set(publication.id, publication)
+      if (matchesDateRange(publication, search_min, search_max, include_unknown)) {
+        let traveler = {
+          id: publication.traveler_id,
+          name: publication.traveler_name,
+          type: publication.contribution_type
+        };
+        if (publications.has(publication.id)) {
+          publications.get(publication.id).travelers.push(traveler);
+        } else {
+          publication.travelers = [traveler];
+          delete publication.traveler_id;
+          delete publication.traveler_name;
+          delete publication.contribution_type;
+          publications.set(publication.id, publication)
+        }
       }
     }
     res.send(Array.from(publications.values()));
@@ -306,6 +310,30 @@ function removeNulls(array) {
   return array.filter(value => value !== null);
 }
 
+/**
+ * Check if a publication falls within the search date range [search_min, search_max].
+ * If a publication has no max, this returns true if include_unknown is true unless the publication
+ * min is greater than search_max.
+ * If a publication has a 3 digit min (i.e. the precise start date is unknown), this returns true
+ * if it could exist in the same decade as the search date range.
+ * This always returns true if include_unknown is true and the publication has neither a min or max.
+ * @param {Object}            publication     Publication to check
+ * @param {undefined|Number}  search_min      Minimum search year
+ * @param {undefined|Number}  search_max      Maximum search year
+ * @param {Boolean}           include_unknown Whether to include publications with unknown end dates
+ */
+function matchesDateRange(publication, search_min, search_max, include_unknown) {
+  return (search_min === undefined || ( //don't check minimum year if we didn't set search_min
+    (publication.travel_year_min >= 1000 && publication.travel_year_min >= search_min) || //if min year has >3 digits, check normally
+    (publication.travel_year_min < 1000 && Math.floor(search_min/10) == publication.travel_year_min) //if min year has 3 digits (precise year unknown), include if same decade
+  )) &&
+  (search_max === undefined || (  //don't check maximum year if we didn't set search_max
+    (publication.travel_year_max !== null && publication.travel_year_max <= search_max) || //if the publication has a year set, search check normally
+    (include_unknown && publication.travel_year_max === null && //if publication has no end date, include if include_unknown is true
+      publication.travel_year_min <= search_max && //don't include results where search_max is greater than the publication's min travel year
+      (publication.travel_year_min >= 1000 || Math.floor(search_max/10) >= publication.travel_year_min)) //if the min travel year has 3 digits, don't include if the max's decade is greater
+  ));
+}
 
 async function getDB() {
   return await sqlite.open({
