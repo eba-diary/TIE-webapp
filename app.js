@@ -231,27 +231,31 @@ app.get("/api/search", async function(req, res, next) {
           FROM publicationsfts pfts
           INNER JOIN publications p ON pfts.rowid = p.id
           WHERE ($title IS NULL OR pfts.rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title))
-            AND ($summary IS NULL OR pfts.rowid IN (SELECT rowid FROM publicationsfts WHERE summary MATCH $summary))
+          AND ($summary IS NULL OR pfts.rowid IN (SELECT rowid FROM publicationsfts WHERE summary MATCH $summary))
           ) pubftsmatches
           ON pubftsmatches.rowid = c.publication_id
-        INNER JOIN (
-          SELECT tfts.rowid, t.name, t.gender FROM travelersfts tfts
+        INNER JOIN travelers t ON t.id = c.traveler_id
+        WHERE publication_id IN (
+          SELECT c.publication_id FROM travelersfts tfts
           INNER JOIN travelers t ON tfts.rowid = t.id
+          INNER JOIN contributions c ON tfts.rowid = c.traveler_id
           WHERE ($traveler IS NULL OR tfts.rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler))
             AND ($nationality IS NULL OR tfts.rowid IN (SELECT rowid FROM travelersfts WHERE nationality MATCH $nationality))
-          ) travftsmatches
-          ON travftsmatches.rowid = c.traveler_id
+            AND ($gender IS NULL OR gender = $gender)
+            AND ($role IS NULL OR type = $role)
+        )
         ORDER BY title COLLATE NOCASE ASC`,
         {
           $title: undefinedIfEmptyString(req.query["title"]),
           $summary: undefinedIfEmptyString(req.query["summary"]),
           $traveler: undefinedIfEmptyString(req.query["traveler"]),
-          $nationality: undefinedIfEmptyString(req.query["nationality"])
+          $nationality: undefinedIfEmptyString(req.query["nationality"]),
+          $gender: undefinedIfEmptyString(req.query["gender"]),
+          $role: undefinedIfEmptyString(req.query["role"])
         });
     let publications = new Map();
     for (let publication of matches) {
       //TODO: come up with a system that excludes non-matching dates but includes unknown end dates ONLY IF requested
-      //TODO: also the name, gender, nationality, and roles of the contributor must line up.
       let traveler = {
         id: publication.traveler_id,
         name: publication.traveler_name,
