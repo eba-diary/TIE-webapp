@@ -245,7 +245,7 @@ app.get("/api/search", async function(req, res, next) {
         sqlParams[placeholders[i]] = roles[i];
       }
     } else {
-      sqlParams["$roles"] = undefined;
+      sqlParams["$role0"] = undefined;
     }
 
     /* The following rows that contain something like
@@ -275,7 +275,7 @@ app.get("/api/search", async function(req, res, next) {
           WHERE ($traveler IS NULL OR tfts.rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler))
             AND ($nationality IS NULL OR tfts.rowid IN (SELECT rowid FROM travelersfts WHERE nationality MATCH $nationality))
             AND ($gender IS NULL OR gender = $gender)
-            AND ($roles IS NULL OR type IN (${rolePlaceholderString}))
+            AND ($role0 IS NULL OR type IN (${rolePlaceholderString}))
         )
         ORDER BY title COLLATE NOCASE ASC`,
         sqlParams);
