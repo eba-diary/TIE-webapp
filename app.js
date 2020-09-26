@@ -215,6 +215,39 @@ app.get("/api/search", async function(req, res, next) {
   res.type("json");
   try {
     let db = await getDB();
+    let sqlParams = {
+      $title: undefinedIfEmptyString(req.query["title"]),
+      $summary: undefinedIfEmptyString(req.query["summary"]),
+      $traveler: undefinedIfEmptyString(req.query["traveler"]),
+      $nationality: undefinedIfEmptyString(req.query["nationality"]),
+      $gender: undefinedIfEmptyString(req.query["gender"])
+    };
+
+    /*
+      The role placeholder thing is a workaround to node-sqlite3 not supporting array parameters:
+      https://github.com/mapbox/node-sqlite3/issues/762
+      The following code implements the workaround suggested in an issue comment, but with named
+      parameters instead:
+      https://github.com/mapbox/node-sqlite3/issues/762#issuecomment-688529227
+      The named parameters use the *index* of the role in the role array as part of its name instead
+      of the role name itself to prevent SQL injections.
+    */
+    let roles = undefinedIfEmptyString(req.query["role"]);
+    let rolePlaceholderString = "";
+    if (roles !== undefined) {
+      if (!Array.isArray(roles)) {
+        roles = [roles]
+      }
+      let placeholders = [...Array(roles.length).keys()] //equivalent to range(len(roles)) in Python
+        .map(number => "$role" + number);
+      rolePlaceholderString = placeholders.join(",");
+      for (let i = 0; i < roles.length; i++) {
+        sqlParams[placeholders[i]] = roles[i];
+      }
+    } else {
+      sqlParams["$roles"] = undefined;
+    }
+
     /* The following rows that contain something like
       WHERE $title IS NULL OR rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title)
       is an evil hack that replaces the much cleaner
@@ -242,17 +275,10 @@ app.get("/api/search", async function(req, res, next) {
           WHERE ($traveler IS NULL OR tfts.rowid IN (SELECT rowid FROM travelersfts WHERE name MATCH $traveler))
             AND ($nationality IS NULL OR tfts.rowid IN (SELECT rowid FROM travelersfts WHERE nationality MATCH $nationality))
             AND ($gender IS NULL OR gender = $gender)
-            AND ($role IS NULL OR type = $role)
+            AND ($roles IS NULL OR type IN (${rolePlaceholderString}))
         )
         ORDER BY title COLLATE NOCASE ASC`,
-        {
-          $title: undefinedIfEmptyString(req.query["title"]),
-          $summary: undefinedIfEmptyString(req.query["summary"]),
-          $traveler: undefinedIfEmptyString(req.query["traveler"]),
-          $nationality: undefinedIfEmptyString(req.query["nationality"]),
-          $gender: undefinedIfEmptyString(req.query["gender"]),
-          $role: undefinedIfEmptyString(req.query["role"])
-        });
+        sqlParams);
     let publications = new Map();
     let search_min = undefinedIfEmptyString(req.query["traveldate-min"]);
     let search_max = undefinedIfEmptyString(req.query["traveldate-max"]);
