@@ -73,6 +73,21 @@
       </details>
       <input id="search-btn" type="submit" value="Search">
     </form>
+    <table class="container">
+      <tr>
+        <th>Title</th>
+        <th class="text-right">Years traveled</th>
+      </tr>
+      <template id="results">
+        <tr>
+          <td>
+            <a class="title"></a>
+            <ul class="author search-authorlist"></ul>
+          </td>
+          <td class="travel-dates text-right font-weight-bold"></td>
+        </tr>
+      </template>
+    </table>
   </main>
   <%- include("../partials/footer") %>
   <script type="module" src="js/check-status.mjs"></script>
