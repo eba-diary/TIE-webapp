@@ -20,6 +20,20 @@ form > div, details > div {
   width: 8em;
 }
 
+.travel-dates {
+  vertical-align: top;
+}
+
+.search-authorlist {
+  list-style: none;
+  font-size: smaller;
+}
+
+.search-authorlist li::before {
+  content: "\2014";
+  margin-right: .5em;
+}
+
 #search-btn {
   margin-top: 1em;
 }
