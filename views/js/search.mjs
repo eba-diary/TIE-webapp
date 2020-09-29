@@ -64,5 +64,27 @@ function getSearchResults(searchParams) {
   fetch("/api/search?" + searchParams.toString())
     .then(checkStatus)
     .then(res => res.json())
-    .then(json => console.log(json)) //TODO: actually display results
+    .then(results => showResults(results));
+}
+
+function showResults(publications) {
+  for (let publication of publications) {
+    let result = document.getElementById("result").content.cloneNode(true);
+
+    let title = result.querySelector(".title");
+    title.href = "/publications/" + publication.id;
+    title.textContent = publication.title;
+
+    let authorList = result.querySelector(".author");
+    for (let traveler of publication.travelers) {
+      let author = document.createElement("li");
+      author.textContent = traveler.name +
+        (traveler.type === "Author" ? "" : `(${traveler.type})`);
+      authorList.appendChild(author);
+    }
+
+    result.querySelector(".travel-dates").textContent = publication.travel_dates;
+
+    document.getElementById("results").appendChild(result);
+  }
 }
