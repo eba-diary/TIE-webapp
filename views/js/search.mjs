@@ -68,6 +68,8 @@ function getSearchResults(searchParams) {
 }
 
 function showResults(publications) {
+  let resultsTable = document.getElementById("results");
+  resultsTable.classList.remove("d-none");
   for (let publication of publications) {
     let result = document.getElementById("result").content.cloneNode(true);
 
@@ -85,6 +87,6 @@ function showResults(publications) {
 
     result.querySelector(".travel-dates").textContent = publication.travel_dates;
 
-    document.getElementById("results").appendChild(result);
+    resultsTable.appendChild(result);
   }
 }
