@@ -13,7 +13,10 @@ function init() {
     .then(checkStatus)
     .then(res => res.json())
     .then(data => populateSearchForm(data));
-  getSearchResults((new URL(document.location)).searchParams);
+  let searchParams = (new URL(document.location)).searchParams;
+  if (!searchParams.entries().next().done) {
+    getSearchResults(searchParams);
+  }
 }
 
 /**
