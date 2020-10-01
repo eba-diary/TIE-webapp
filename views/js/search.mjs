@@ -17,6 +17,12 @@ function init() {
   if (!searchParams.entries().next().done) {
     getSearchResults(searchParams);
   }
+  document.getElementById("search-btn").addEventListener("click", function(event) {
+    event.preventDefault();
+    let searchParams = new URLSearchParams(new FormData(document.querySelector("form")));
+    history.pushState(null, null, "?" + searchParams.toString());
+    getSearchResults(searchParams);
+  });
 }
 
 /**
@@ -69,6 +75,8 @@ function getSearchResults(searchParams) {
 
 function showResults(publications) {
   let resultsTable = document.getElementById("results");
+  let resultsBody = resultsTable.querySelector("tbody");
+  resultsBody.innerHTML = "";
   resultsTable.classList.remove("d-none");
   for (let publication of publications) {
     let result = document.getElementById("result").content.cloneNode(true);
@@ -87,6 +95,6 @@ function showResults(publications) {
 
     result.querySelector(".travel-dates").textContent = publication.travel_dates;
 
-    resultsTable.appendChild(result);
+    resultsBody.appendChild(result);
   }
 }
