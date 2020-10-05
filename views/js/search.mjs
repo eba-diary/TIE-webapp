@@ -89,7 +89,7 @@ function showResults(publications) {
     for (let traveler of publication.travelers) {
       let author = document.createElement("li");
       author.textContent = traveler.name +
-        (traveler.type === "Author" ? "" : `(${traveler.type})`);
+        (traveler.type === "Author" ? "" : ` (${traveler.type})`);
       authorList.appendChild(author);
     }
 
