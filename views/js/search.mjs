@@ -82,7 +82,7 @@ function showResults(publications) {
     let result = document.getElementById("result").content.cloneNode(true);
 
     let title = result.querySelector(".title");
-    title.href = "/publications/" + publication.id;
+    title.href = "/publication?id=" + publication.id;
     title.textContent = publication.title;
 
     let authorList = result.querySelector(".author");
