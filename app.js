@@ -333,7 +333,7 @@ function ftsEscape(query) {
  * @param {String} query query to process
  * @return {String} processed query
  */
-function processTextQueries(query) {
+function processFTSQueries(query) {
   return ftsEscape(undefinedIfEmptyString(query))
 }
 
