@@ -318,6 +318,7 @@ function undefinedIfEmptyString(string) {
 /**
  * Escape quotes and wrap each word as a query literal for FTS5.
  * @param {String} query query to escape
+ * @return {String} escaped query
  */
 function ftsEscape(query) {
   if (query === undefined) return query;
