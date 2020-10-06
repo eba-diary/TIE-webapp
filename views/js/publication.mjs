@@ -39,31 +39,58 @@ function showPublication(publication) {
     authorList.appendChild(author);
   }
   let iiifURL = publication["iiif"];
-  Mirador.viewer({
-    id: "mirador-viewer",
-    manifests: {
-      iiifURL: {
-        provider: "Internet Archive"
-      }
-    },
-    windows: [
-      {
-        loadedManifest: iiifURL,
-        canvasIndex: 2,
-      }
-    ],
-    window: {
-      allowClose: false,
-      defaultSideBarPanel: 'info',
-      defaultView: 'gallery',
-      sideBarOpenByDefault: false,
-      hideWindowTitle: true
-    },
-    thumbnailNavigation: {
-      defaultPosition: 'off',
-    },
-    workspaceControlPanel: {
-      enabled: false,
-    },
-  });
+  if (iiifURL) {
+    affixScriptToHead("https://unpkg.com/mirador@rc/dist/mirador.min.js", function() {
+      Mirador.viewer({
+        id: "mirador-viewer",
+        manifests: {
+          iiifURL: {
+            provider: "Internet Archive"
+          }
+        },
+        windows: [
+          {
+            loadedManifest: iiifURL,
+            canvasIndex: 2,
+          }
+        ],
+        window: {
+          allowClose: false,
+          defaultSideBarPanel: 'info',
+          defaultView: 'gallery',
+          sideBarOpenByDefault: false,
+          hideWindowTitle: true
+        },
+        thumbnailNavigation: {
+          defaultPosition: 'off',
+        },
+        workspaceControlPanel: {
+          enabled: false,
+        },
+      });
+    })
+  }
+}
+
+/**
+ * Throw an error if a script failed to load.
+ * From examples section in https://developer.mozilla.org/en-US/docs/Web/API/HTMLScriptElement
+ * @param {Error} oError script loading error object
+ */
+function loadError(oError) {
+  throw new URIError("The script " + oError.target.src + " didn't load correctly.");
+}
+
+/**
+ * Dynamically load a script
+ * From examples section in https://developer.mozilla.org/en-US/docs/Web/API/HTMLScriptElement
+ * @param {String} url URL of script source
+ * @param {Function} onloadFunction callback function to run when script loads
+ */
+function affixScriptToHead(url, onloadFunction) {
+  var newScript = document.createElement("script");
+  newScript.onerror = loadError;
+  if (onloadFunction) { newScript.onload = onloadFunction; }
+  document.head.appendChild(newScript);
+  newScript.src = url;
 }
