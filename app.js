@@ -316,6 +316,19 @@ function undefinedIfEmptyString(string) {
 }
 
 /**
+ * Escape quotes and wrap each word as a query literal for FTS5.
+ * @param {String} query query to escape
+ */
+function ftsEscape(query) {
+  if (query === undefined) return query;
+  query = query.replace(/"/g, '""');
+  console.log(query)
+  return query.split(" ")
+    .map(token => `"${token}"`)
+    .join(" ");
+}
+
+/**
  * Flattens a DB result array so that it only contains value
  * @param {Object[]} array Array recieved from DB query
  * @returns {Object[]} Flattened array
