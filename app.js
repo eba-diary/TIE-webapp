@@ -329,6 +329,15 @@ function ftsEscape(query) {
 }
 
 /**
+ * Process FTS string search queries to they can be put in an SQLite prepared statements
+ * @param {String} query query to process
+ * @return {String} processed query
+ */
+function processTextQueries(query) {
+  return ftsEscape(undefinedIfEmptyString(query))
+}
+
+/**
  * Flattens a DB result array so that it only contains value
  * @param {Object[]} array Array recieved from DB query
  * @returns {Object[]} Flattened array
