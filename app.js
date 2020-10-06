@@ -216,9 +216,9 @@ app.get("/api/search", async function(req, res, next) {
   try {
     let db = await getDB();
     let sqlParams = {
-      $title: undefinedIfEmptyString(req.query["title"]),
-      $summary: undefinedIfEmptyString(req.query["summary"]),
-      $traveler: undefinedIfEmptyString(req.query["traveler"]),
+      $title: processFTSQueries(req.query["title"]),
+      $summary: processFTSQueries(req.query["summary"]),
+      $traveler: processFTSQueries(req.query["traveler"]),
       $nationality: undefinedIfEmptyString(req.query["nationality"]),
       $gender: undefinedIfEmptyString(req.query["gender"])
     };
@@ -323,7 +323,6 @@ function undefinedIfEmptyString(string) {
 function ftsEscape(query) {
   if (query === undefined) return query;
   query = query.replace(/"/g, '""');
-  console.log(query)
   return query.split(" ")
     .map(token => `"${token}"`)
     .join(" ");
