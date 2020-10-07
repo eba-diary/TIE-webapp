@@ -28,16 +28,6 @@ form > div, details > div {
   vertical-align: top;
 }
 
-.search-authorlist {
-  list-style: none;
-  font-size: smaller;
-}
-
-.search-authorlist li::before {
-  content: "\2014";
-  margin-right: .25em;
-}
-
 #search-btn {
   margin-top: 1em;
 }

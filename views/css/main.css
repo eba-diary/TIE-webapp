@@ -17,3 +17,13 @@ nav {
   padding-left: 0;
   margin-bottom: 0
 }
+
+.small-authorlist {
+  list-style: none;
+  font-size: smaller;
+}
+
+.small-authorlist li::before {
+  content: "\2014";
+  margin-right: .25em;
+}
