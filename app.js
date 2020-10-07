@@ -163,6 +163,7 @@ app.get("/api/decades/", async function(req, res, next){
       let decade;
       if (yearMin === null || yearMin < 1000) decade = yearMin
       else decade = Math.floor(yearMin/10);
+      delete publication["travel_year_min"];
 
       if (decades.has(decade)) {
         decades.get(decade).publications.push(publication)
