@@ -113,6 +113,74 @@ app.get("/api/publications/", async function(req, res, next){
 });
 
 /**
+ * @api {get} /api/decades/ Get a list of decades and the publications whose travels start in it
+ * @apiName   GetDecadeList
+ * @apiGroup  Publications
+ * 
+ * @apiSuccess {Object[]} decades                 List of decades with publications
+ * @apiSuccess {Number}   decades.start_year      Starting year of the decade
+ * @apiSuccess {Object[]} decades.publications    Publications in this decade, in ascending order
+ * @apiSuccess {Number}   publications.id         Publication ID
+ * @apiSuccess {String}   publications.title      Title
+ * @apiSuccess {String}   publications.summary    Summary
+ * @apiSuccess {Object[]} publications.travelers  Traveler ID
+ * @apiSuccess {String}   travelers.id            Traveler id
+ * @apiSuccess {String}   travelers.name          Traveler name
+ * @apiSuccess {String}   travelers.type          Type of contribution traveler made to publication
+ */
+app.get("/api/decades/", async function(req, res, next){
+  res.type("json");
+  try{
+    let db = await getDB();
+    let rows = await db.all(`SELECT p.id, p.title, p.summary, p.travel_year_min, p.travel_dates
+                            t.id traveler_id, t.name traveler_name, c.type contribution_type
+                            FROM contributions c
+                            INNER JOIN publications p ON p.id = c.publication_id
+                            INNER JOIN travelers t on t.id = c.traveler_id
+                            ORDER BY p.travel_year_min
+                            COLLATE NOCASE ASC`);
+    db.close();
+    let publications = new Map();
+    for (let publication of rows) {
+      let traveler = {
+        id: publication.traveler_id,
+        name: publication.traveler_name,
+        type: publication.contribution_type
+      };
+      if (publications.has(publication.id)) {
+        publications.get(publication.id).travelers.push(traveler);
+      } else {
+        publication.travelers = [traveler];
+        delete publication.traveler_id;
+        delete publication.traveler_name;
+        delete publication.contribution_type;
+        publications.set(publication.id, publication)
+      }
+    }
+    let decades = new Map();
+    for (let publication of publications.values()) {
+      let yearMin = publication["travel_year_min"];
+      let decade;
+      if (yearMin === null || yearMin < 1000) decade = yearMin
+      else decade = Math.floor(yearMin/10);
+
+      if (decades.has(decade)) {
+        decades.get(decade).publications.push(publication)
+      } else {
+        decades.set(decade, {
+          decade: decade,
+          publications: [publication]
+        });
+      }
+    }
+
+    res.send(Array.from(decades.values()));
+  } catch (error) {
+    next(error);
+  }
+});
+
+/**
  * @api {get} /api/travelers/ Get a list of travelers and their publications in alphabetical order
  * @apiName GetTravelerList
  * @apiGroup Travelers
