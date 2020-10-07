@@ -20,14 +20,18 @@ function init() {
  * @param {Object[]} decades decades to show
  */
 function showDecades(decades) {
+  let allDecades = document.getElementById("decades");
   for (let decade of decades) {
     let decadeDisplay = document.getElementById("decade").content.cloneNode(true);
+    let publicationTable = decadeDisplay.querySelector(".publications");
 
     let year = decade.decade;
-    year = (decade === null) ? "Unknown decade" : year + "s";
-    decadeDisplay.querySelector(".decade-name").textContent = year;
+    let decadeName = (year === null) ? "Travel years unknown" : (year + "0s");
+    decadeDisplay.querySelector(".decade-name").textContent = decadeName;
+    if (year === null) publicationTable.querySelector("thead").remove();
 
-    addPublications(decade.publications, decadeDisplay.querySelector(".publications"));
+    addPublications(decade.publications, publicationTable);
+    allDecades.appendChild(decadeDisplay);
   }
 }
 
