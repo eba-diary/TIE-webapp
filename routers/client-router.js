@@ -11,6 +11,7 @@ const PAGES = [
   "publication",
   "publications-list",
   "travelers-list",
+  "decades-list",
   "search"
 ]
 
