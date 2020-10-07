@@ -26,9 +26,21 @@ function showDecades(decades) {
     let publicationTable = decadeDisplay.querySelector(".publications");
 
     let year = decade.decade;
-    let decadeName = (year === null) ? "Travel years unknown" : (year + "0s");
-    decadeDisplay.querySelector(".decade-name").textContent = decadeName;
-    if (year === null) publicationTable.querySelector("thead").remove();
+    let decadeName = year + "0s";
+    let decadeNameDisplay = decadeDisplay.querySelector(".decade-name");
+    if (year === null) {
+      decadeName = "Travel years unknown";
+      publicationTable.querySelector("thead").remove();
+    } else {
+      let anchorName = "decade-" + decadeName;
+      decadeNameDisplay.id = anchorName;
+      let anchor = document.createElement("a");
+      anchor.textContent = decadeName;
+      anchor.href = "#" + anchorName;
+      anchor.classList.add("index-link");
+      document.getElementById("index").appendChild(anchor)
+    }
+    decadeNameDisplay.textContent = decadeName;
 
     addPublications(decade.publications, publicationTable);
     allDecades.appendChild(decadeDisplay);
