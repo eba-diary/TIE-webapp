@@ -132,7 +132,7 @@ app.get("/api/decades/", async function(req, res, next){
   res.type("json");
   try{
     let db = await getDB();
-    let rows = await db.all(`SELECT p.id, p.title, p.summary, p.travel_year_min, p.travel_dates
+    let rows = await db.all(`SELECT p.id, p.title, p.summary, p.travel_year_min, p.travel_dates,
                             t.id traveler_id, t.name traveler_name, c.type contribution_type
                             FROM contributions c
                             INNER JOIN publications p ON p.id = c.publication_id
