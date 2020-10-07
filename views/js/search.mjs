@@ -73,6 +73,10 @@ function getSearchResults(searchParams) {
     .then(results => showResults(results));
 }
 
+/**
+ * Shows the search results in the results table
+ * @param {Object[]} publications list of publications that matched the search query
+ */
 function showResults(publications) {
   let resultsTable = document.getElementById("results");
   let resultsBody = resultsTable.querySelector("tbody");
