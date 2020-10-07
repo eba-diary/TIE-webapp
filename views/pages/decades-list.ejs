@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nile Travelogues - Publications list</title>
+  <link rel="stylesheet" href="/css/lists.css">
+  <%- include("../partials/head") %>
+</head>
+<body>
+  <header>
+    <%- include("../partials/header") %>
+    <h1 class="container">List of Publications</h1>
+  </header>
+  <main class="container">
+    <nav id="index" class="d-flex flex-wrap justify-content-center"></nav>
+    <div id="decades">
+      <template id="decade">
+        <h2 class="decade-name"></h2>
+        <table class="publications container">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th class="text-right">Years&nbsp;traveled</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </template>
+      <template id="publication">
+        <tr>
+          <td>
+            <a class="title"></a>
+            <ul class="author authorlist"></ul>
+          </td>
+          <td class="travel-dates text-right font-weight-bold"></td>
+        </tr>
+      </template>
+    </div>
+  </main>
+  <%- include("../partials/footer") %>
+  <script type="module" src="/js/check-status.mjs"></script>
+  <script type="module" src="/js/decades-list.mjs"></script>
+</body>
+</html>
