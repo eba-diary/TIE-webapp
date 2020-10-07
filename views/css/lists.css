@@ -14,3 +14,7 @@ dl > div {
   background-color: gainsboro;
   font-family: monospace;
 }
+
+.travel-dates {
+  vertical-align: top;
+}
