@@ -174,8 +174,8 @@ app.get("/api/decades/", async function(req, res, next){
         });
       }
     }
-
-    res.send(Array.from(decades.values()));
+    decades = Array.from(decades.values()).sort((a, b) => a.decade - b.decade);
+    res.send(decades);
   } catch (error) {
     next(error);
   }
