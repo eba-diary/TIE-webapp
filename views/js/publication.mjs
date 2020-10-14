@@ -69,6 +69,9 @@ function showPublication(publication) {
         },
       });
     })
+  } else {
+    document.getElementById("no-iiif-alert").classList.remove("d-none");
+    document.getElementById("publication-details").open = true;
   }
 }
 

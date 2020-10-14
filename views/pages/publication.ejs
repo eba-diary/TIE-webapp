@@ -12,11 +12,11 @@
     <%- include("../partials/header") %>
     <div class="container">
       <h1 id="title"></h1>
-      <details>
+      <details id="publication-details">
         <summary>Show more info</summary>
         <dl>
           <div class="row">
-            <dt class="col-sm-3">Authors</dt>
+            <dt class="col-sm-3">Author(s)</dt>
             <dd class="col-sm-9">
               <ul id="authors" class="plain-authorlist"></ul>
             </dd>
@@ -50,6 +50,13 @@
     </div>
   </header>
   <main>
+    <div id="no-iiif-alert"
+      class="alert alert-warning alert-dismissable fade show container d-none" role="alert">
+      Could not find any images for pages in this publication. (IIIF Manifest not found)
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
     <div id="mirador-viewer"></div>
   </main>
   <%- include("../partials/footer") %>
