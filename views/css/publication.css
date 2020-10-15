@@ -3,7 +3,7 @@
 #mirador-viewer {
   position: relative;
   height: 75vh;
-  width: 100vw;
+  width: 100%;
   left: 0;
 }
 
