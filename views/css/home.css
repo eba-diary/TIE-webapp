@@ -6,6 +6,7 @@ nav {
 
 .landing-image {
   background-image: url("/images/egypt_header_map.jpg");
+  width: 100%;
   height: 20em;
   margin-bottom: 1em;
 }
