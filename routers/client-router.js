@@ -17,6 +17,7 @@ const PAGES = [
 
 router.use("/js", express.static("views/js"));
 router.use("/css", express.static("views/css"));
+router.use("/images", express.static("views/images"));
 
 router.get("/", function(req, res){
   res.render("pages/home");
