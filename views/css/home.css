@@ -1,0 +1,22 @@
+/* home.css - styles for the home/landing page */
+
+nav {
+  margin-bottom: 0 !important; 
+}
+
+.landing-image {
+  background-image: url("/images/egypt_header_map.jpg");
+  height: 20em;
+  margin-bottom: 1em;
+}
+
+.landing-image > div {
+  background-color: rgba(0,0,0,.70);
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  text-align: right;
+  height: 100%;
+  color: white;
+  padding: 0 2em;
+}
