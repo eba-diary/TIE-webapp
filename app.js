@@ -269,6 +269,7 @@ app.get("/api/searchpagedata", async function(req, res, next) {
  * @apiParam {String} [traveldate-min]  Match publications detailing travels on or after this year
  * @apiParam {String} [traveldate-max]  Match publications detailing travels on or before this year
  * @apiParam {String} [include-unknown] Match publications with unknown end travel date; "on" if yes
+ * @apiParam {String} [readable]        Match publications that can be read in the app; "on" if yes
  * @apiParam {String} [traveler]        Match travelers that contain all names in this string
  * @apiParam {String} [nationality]     Match travelers with this nationality
  * @apiParam {String} [gender]          Match travelers with this gender
@@ -289,7 +290,8 @@ app.get("/api/search", async function(req, res, next) {
       $summary: processFTSQueries(req.query["summary"]),
       $traveler: processFTSQueries(req.query["traveler"]),
       $nationality: undefinedIfEmptyString(req.query["nationality"]),
-      $gender: undefinedIfEmptyString(req.query["gender"])
+      $gender: undefinedIfEmptyString(req.query["gender"]),
+      $readable: undefinedIfEmptyString(req.query["readable"])
     };
 
     /*
@@ -329,12 +331,13 @@ app.get("/api/search", async function(req, res, next) {
           traveler_id, type contribution_type, travel_year_min, travel_year_max
         FROM contributions c
         INNER JOIN (
-          SELECT pfts.rowid, p.title, p.travel_dates, p.travel_year_min, p.travel_year_max
+          SELECT pfts.rowid, p.title, p.travel_dates, p.travel_year_min, p.travel_year_max, p.iiif
           FROM publicationsfts pfts
           INNER JOIN publications p ON pfts.rowid = p.id
           WHERE ($title IS NULL OR pfts.rowid IN (SELECT rowid FROM publicationsfts WHERE title MATCH $title))
-          AND ($summary IS NULL OR pfts.rowid IN (SELECT rowid FROM publicationsfts WHERE summary MATCH $summary))
-          ) pubftsmatches
+            AND ($summary IS NULL OR pfts.rowid IN (SELECT rowid FROM publicationsfts WHERE summary MATCH $summary))
+            AND ($readable IS NULL OR p.iiif IS NOT NULL)
+        ) pubftsmatches
           ON pubftsmatches.rowid = c.publication_id
         INNER JOIN travelers t ON t.id = c.traveler_id
         WHERE publication_id IN (
