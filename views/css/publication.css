@@ -1,5 +1,9 @@
 /* publication.css - styles for the publication viewing page */
 
+#report-btn {
+  margin-bottom: .5em;
+}
+
 #mirador-viewer {
   position: relative;
   height: 75vh;
