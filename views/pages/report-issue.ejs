@@ -13,15 +13,26 @@
     <h1 class="container">Report issue</h1>
   </header>
   <main class="container">
-    <form>
+    <form action="mailto:example@example.com?subject=Nile Travelogues issue report"
+      method="POST" enctype="text/plain">
       <div class="row">
-        <label for="email" class="col-sm-2">Your email</label>
-        <input type="text" class="form-control col-sm-10" id="email" name="email">
+        <label for="reporter-email" class="col-sm-2">Your email</label>
+        <input type="text" class="form-control col-sm-10" id="reporter-email" name="reporter-email">
       </div>
       <div class="row">
         <label for="publication-id" class="col-sm-2">Publication ID</label>
         <input type="text" class="form-control col-sm-10" id="publication-id" name="publication-id">
       </div>
+      <div class="row">
+        <label for="publication-title" class="col-sm-2">Publication title</label>
+        <input type="text" class="form-control col-sm-10" id="publication-title" name="publication-title">
+      </div>
+      <div class="row">
+        <label for="issue-description" class="col-sm-2">Issue description</label>
+        <textarea class="form-control col-sm-10" id="issue-description" name="issue-description">
+        </textarea>
+      </div>
+      <input id="search-btn" type="submit" value="Submit">
     </form>
   </main>
   <%- include("../partials/footer") %>
