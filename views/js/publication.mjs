@@ -19,6 +19,12 @@ function init() {
 }
 
 function showPublication(publication) {
+  const reportUrl = new URL("/report-issue", window.location.origin);
+  reportUrl.searchParams.append("publicationId", publication["id"])
+  reportUrl.searchParams.append("publicationTitle", publication["title"])
+  document.getElementById("report-btn").href = reportUrl.href;
+  document.getElementById("report-btn").classList.remove("d-none");
+
   document.getElementById("title").textContent = publication["title"];
   document.title = "Nile Travelogues - " + publication["title"];
   let moreInfoFields = ["travel_dates", "publisher", "publication_place", "publication_date",
