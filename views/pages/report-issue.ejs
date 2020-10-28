@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nile Travelogues - Report issue</title>
+  <link rel="stylesheet" href="/css/form.css">
+  <%- include("../partials/head") %>
+</head>
+<body>
+  <header>
+    <%- include("../partials/header") %>
+    <h1 class="container">Report issue</h1>
+  </header>
+  <main class="container">
+    <form>
+      <div class="row">
+        <label for="email" class="col-sm-2">Your email</label>
+        <input type="text" class="form-control col-sm-10" id="email" name="email">
+      </div>
+      <div class="row">
+        <label for="publication-id" class="col-sm-2">Publication ID</label>
+        <input type="text" class="form-control col-sm-10" id="publication-id" name="publication-id">
+      </div>
+    </form>
+  </main>
+  <%- include("../partials/footer") %>
+</body>
+</html>
