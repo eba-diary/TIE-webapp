@@ -1,0 +1,14 @@
+/* form.css - styles for pages that a form */
+
+label {
+  margin-bottom: 0 !important;
+}
+
+form {
+  margin-bottom: 1em;
+}
+
+form > div, details > div {
+  margin: 1em;
+  align-items: center;
+}
