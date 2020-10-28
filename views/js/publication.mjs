@@ -28,7 +28,7 @@ function showPublication(publication) {
   document.getElementById("title").textContent = publication["title"];
   document.title = "Nile Travelogues - " + publication["title"];
   let moreInfoFields = ["travel_dates", "publisher", "publication_place", "publication_date",
-    "publisher_misc", "summary"];
+    "publisher_misc", "summary", "id"];
   for (let field of moreInfoFields) {
     let display = document.getElementById(field.replace("_", "-"));
     if (publication[field] !== null) {
