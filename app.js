@@ -84,7 +84,7 @@ app.get("/api/publications/", async function(req, res, next){
     let db = await getDB();
     let rows = await db.all(`SELECT p.id, trim(p.title) title, p.summary, t.id traveler_id,
                               t.name traveler_name, c.type contribution_type,
-                              (p.iiif IS NULL) canread
+                              (p.iiif IS NOT NULL) canread
                             FROM contributions c
                             INNER JOIN publications p ON p.id = c.publication_id
                             INNER JOIN travelers t on t.id = c.traveler_id
@@ -126,6 +126,7 @@ app.get("/api/publications/", async function(req, res, next){
  * @apiSuccess {String}   publications.title      Title
  * @apiSuccess {String}   publications.summary    Summary
  * @apiSuccess {Object[]} publications.travelers  Traveler ID
+ * @apiSuccess {Number}   publications.canread    1 if IIIF manifest is available, 0 otherwise
  * @apiSuccess {String}   travelers.id            Traveler id
  * @apiSuccess {String}   travelers.name          Traveler name
  * @apiSuccess {String}   travelers.type          Type of contribution traveler made to publication
@@ -135,7 +136,8 @@ app.get("/api/decades/", async function(req, res, next){
   try{
     let db = await getDB();
     let rows = await db.all(`SELECT p.id, p.title, p.summary, p.travel_year_min, p.travel_dates,
-                            t.id traveler_id, t.name traveler_name, c.type contribution_type
+                            t.id traveler_id, t.name traveler_name, c.type contribution_type,
+                            (p.iiif IS NOT NULL) canread
                             FROM contributions c
                             INNER JOIN publications p ON p.id = c.publication_id
                             INNER JOIN travelers t on t.id = c.traveler_id
@@ -196,6 +198,7 @@ app.get("/api/decades/", async function(req, res, next){
  * @apiSuccess {Number}   publications.id             Publication ID
  * @apiSuccess {String}   publications.title          Publication title
  * @apiSuccess {String}   publications.contribution   Type of contribution traveler made to the publication
+ * @apiSuccess {Number}   publications.canread        1 if IIIF manifest is available, 0 otherwise
  */
 app.get("/api/travelers/", async function(req, res, next){
   res.type("json");
@@ -203,7 +206,7 @@ app.get("/api/travelers/", async function(req, res, next){
     let db = await getDB();
     let rows = await db.all(`SELECT t.id, t.name, t.nationality,
                               c.type contribution_type, p.id publication_id,
-                              p.title publication_title, (p.iiif IS NULL) canread
+                              p.title publication_title, (p.iiif IS NOT NULL) canread
                             FROM travelers t
                             LEFT JOIN contributions c ON t.id == c.traveler_id
                             INNER JOIN publications p ON c.publication_id == p.id
