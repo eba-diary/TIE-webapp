@@ -73,6 +73,7 @@ app.get("/api/publications/:id", async function(req, res, next){
  * @apiSuccess {String}   publications.title      Title
  * @apiSuccess {String}   publications.summary    Summary
  * @apiSuccess {Object[]} publications.travelers  Traveler ID
+ * @apiSuccess {Number}   publications.canread    1 if IIIF manifest is available, 0 otherwise
  * @apiSuccess {String}   travelers.id            Traveler id
  * @apiSuccess {String}   travelers.name          Traveler name
  * @apiSuccess {String}   travelers.type          Type of contribution traveler made to publication
@@ -82,7 +83,8 @@ app.get("/api/publications/", async function(req, res, next){
   try{
     let db = await getDB();
     let rows = await db.all(`SELECT p.id, trim(p.title) title, p.summary, t.id traveler_id,
-                              t.name traveler_name, c.type contribution_type
+                              t.name traveler_name, c.type contribution_type,
+                              (p.iiif IS NULL) canread
                             FROM contributions c
                             INNER JOIN publications p ON p.id = c.publication_id
                             INNER JOIN travelers t on t.id = c.traveler_id

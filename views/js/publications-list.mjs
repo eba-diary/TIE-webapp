@@ -43,6 +43,7 @@ function showPublications(publications) {
     if (injectAnchorID) entry.querySelector(".title").id = "startswith-" + firstLetter;
     entry.querySelector(".title").textContent = publication.title;
     entry.querySelector(".title").href = "/publication?id=" + publication.id;
+    if (publication.canread === 1) entry.querySelector(".readable").classList.remove("d-none");
     entry.querySelector(".summary").textContent = publication.summary;
     let authorList = entry.querySelector(".author");
     for (let contributor of publication.travelers) {
