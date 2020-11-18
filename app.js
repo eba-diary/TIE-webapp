@@ -203,7 +203,7 @@ app.get("/api/travelers/", async function(req, res, next){
     let db = await getDB();
     let rows = await db.all(`SELECT t.id, t.name, t.nationality,
                               c.type contribution_type, p.id publication_id,
-                              p.title publication_title
+                              p.title publication_title, (p.iiif IS NULL) canread
                             FROM travelers t
                             LEFT JOIN contributions c ON t.id == c.traveler_id
                             INNER JOIN publications p ON c.publication_id == p.id
@@ -214,7 +214,8 @@ app.get("/api/travelers/", async function(req, res, next){
       let publication = {
         id: traveler.publication_id,
         title: traveler.publication_title,
-        contribution: traveler.contribution_type
+        contribution: traveler.contribution_type,
+        canread: traveler.canread
       };
       if (travelers.has(traveler.id)) {
         travelers.get(traveler.id).publications.push(publication);

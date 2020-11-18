@@ -36,11 +36,11 @@ function showTravelers(travelers) {
     entry.querySelector(".nationality").textContent = traveler["nationality"];
     let pubList = entry.querySelector(".publications");
     for (let publication of traveler["publications"]) {
-      let pubEntry = document.createElement("li");
-      let link = document.createElement("a");
+      let pubEntry = document.getElementById("publication").content.cloneNode(true);
+      let link = pubEntry.querySelector(".title");
       link.href = "/publication?id=" + publication["id"];
       link.textContent = publication["title"];
-      pubEntry.append(link);
+      if (publication["canread"] === 1) pubEntry.querySelector(".readable").classList.remove("d-none");
       pubList.append(pubEntry);
     }
     travelerList.appendChild(entry);
