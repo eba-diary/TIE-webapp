@@ -61,6 +61,8 @@ function addPublications(publications, table) {
     title.href = "/publication?id=" + publication.id;
     title.textContent = publication.title;
 
+    if (publication.canread === 1) row.querySelector(".readable").classList.remove("d-none");
+
     let authorList = row.querySelector(".author");
     for (let traveler of publication.travelers) {
       let author = document.createElement("li");

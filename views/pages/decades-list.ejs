@@ -10,7 +10,10 @@
 <body>
   <header>
     <%- include("../partials/header") %>
-    <h1 class="container">Browse publications by decade</h1>
+    <div class="container">
+      <h1>Browse publications by decade</h1>
+      <p><span class="readable text-secondary">🕮 = Publication can be read on this site</span></p>
+    </div>
   </header>
   <main class="container">
     <nav id="index" class="d-flex flex-wrap justify-content-center"></nav>
@@ -31,6 +34,7 @@
         <tr>
           <td>
             <a class="title"></a>
+            <span class="readable text-secondary d-none" title="The publication can be read on this site">🕮</span>
             <ul class="author small-authorlist"></ul>
           </td>
           <td class="travel-dates text-right font-weight-bold"></td>
