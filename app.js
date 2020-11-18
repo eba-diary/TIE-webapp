@@ -29,7 +29,7 @@ app.use("/", clientRouter);
  * @apiSuccess {String}   publication_date      Date of publication
  * @apiSuccess {String}   publisher_misc        Miscellaneous publication info
  * @apiSuccess {String}   summary               Summary of the publication
- * @apiSuccess {String}   url                   Internet Archive URL
+ * @apiSuccess {String}   url                   (Tentatively unassigned; see https://github.com/eba-diary/Travelogues-db-conversion/wiki/Overview-of-tables#publications)
  * @apiSuccess {String}   iiif                  IIIF manifest URL
  * @apiSuccess {Object[]} travelers             Info on each contributing traveler to the publciation
  * @apiSuccess {Number}   travelers.id          Traveler id
@@ -81,12 +81,12 @@ app.get("/api/publications/", async function(req, res, next){
   res.type("json");
   try{
     let db = await getDB();
-    let rows = await db.all(`SELECT p.id, p.title, p.summary, t.id traveler_id,
+    let rows = await db.all(`SELECT p.id, trim(p.title) title, p.summary, t.id traveler_id,
                               t.name traveler_name, c.type contribution_type
                             FROM contributions c
                             INNER JOIN publications p ON p.id = c.publication_id
                             INNER JOIN travelers t on t.id = c.traveler_id
-                            ORDER BY p.title
+                            ORDER BY title
                             COLLATE NOCASE ASC`);
     db.close();
     let publications = new Map();
