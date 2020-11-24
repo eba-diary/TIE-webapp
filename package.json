@@ -1,6 +1,6 @@
 {
   "name": "travelogues-webapp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Web application for Travelers in Egypt",
   "main": "app.js",
   "scripts": {
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fechan/TIE-webapp.git"
+    "url": "git+https://github.com/eba-diary/TIE-webapp.git"
   },
   "author": "fechan",
-  "license": "ISC",
+  "license": "GNU General Public License v3.0",
   "bugs": {
-    "url": "https://github.com/fechan/TIE-webapp/issues"
+    "url": "https://github.com/eba-diary/TIE-webapp/issues"
   },
-  "homepage": "https://github.com/fechan/TIE-webapp#readme",
+  "homepage": "https://github.com/eba-diary/TIE-webapp#readme",
   "dependencies": {
     "ejs": "^3.1.5",
     "express": "^4.17.1",
