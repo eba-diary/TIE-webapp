@@ -38,7 +38,7 @@ function showTravelers(travelers) {
     for (let publication of traveler["publications"]) {
       let pubEntry = document.getElementById("publication").content.cloneNode(true);
       let link = pubEntry.querySelector(".title");
-      link.href = "/publication?id=" + publication["id"];
+      link.href = "/publication?publicationId=" + publication["id"];
       link.textContent = publication["title"];
       if (publication["canread"] === 1) pubEntry.querySelector(".readable").classList.remove("d-none");
       pubList.append(pubEntry);

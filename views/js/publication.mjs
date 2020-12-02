@@ -11,7 +11,7 @@ window.addEventListener("load", init);
  * Initializes the page, getting publication ID, showing publication info, IIIF display, and text.
  */
 function init() {
-  let id = new URLSearchParams(window.location.search).get("id");
+  let id = new URLSearchParams(window.location.search).get("publicationId");
   fetch("/api/publications/" + id)
     .then(checkStatus)
     .then(res => res.json())

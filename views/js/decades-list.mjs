@@ -58,7 +58,7 @@ function addPublications(publications, table) {
     let row = document.getElementById("publication").content.cloneNode(true);
 
     let title = row.querySelector(".title");
-    title.href = "/publication?id=" + publication.id;
+    title.href = "/publication?publicationId=" + publication.id;
     title.textContent = publication.title;
 
     if (publication.canread === 1) row.querySelector(".readable").classList.remove("d-none");
