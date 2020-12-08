@@ -63,9 +63,37 @@
       </button>
     </div>
     <div id="mirador-viewer"></div>
+
+    <pb-page endpoint="http://localhost:8080/exist/apps/tei-publisher">
+        <pb-document id="document1" path="playground/test1.txt.tei" odd="shakespeare"></pb-document>
+
+        <pb-progress></pb-progress>
+        <!-- Output the document title -->
+        <pb-view src="document1" xpath="//teiHeader/fileDesc/titleStmt/title">
+            <pb-param name="header" value="short" />
+        </pb-view>
+        <pb-view id="view1" src="document1" view="page" append-footnotes animation column-separator=".tei-cb"></pb-view>
+        <footer>
+            <!-- Navigate to next page -->
+            <pb-navigation direction="forward" keyboard="right">
+                <paper-button>
+                    <iron-icon icon="icons:chevron-right"></iron-icon>
+                </paper-button>
+            </pb-navigation>
+            <!-- Navigate to previous page -->
+            <pb-navigation direction="backward" keyboard="left">
+                <paper-button>
+                    <iron-icon icon="icons:chevron-left"></iron-icon>
+                </paper-button>
+            </pb-navigation>
+        </footer>
+    </pb-page>
   </main>
   <%- include("../partials/footer") %>
   <script type="module" src="/js/check-status.mjs"></script>
   <script type="module" src="/js/publication.mjs"></script>
+  <!-- TEI Publisher imports -->
+  <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.4.3/webcomponents-loader.js"></script>
+  <script type="module" src="https://unpkg.com/@teipublisher/pb-components@latest/dist/pb-components-bundle.js"></script>
 </body>
 </html>
