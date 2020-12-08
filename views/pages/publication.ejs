@@ -64,14 +64,10 @@
     </div>
     <div id="mirador-viewer" class="d-none"></div>
 
-    <pb-page endpoint="http://localhost:8080/exist/apps/tei-publisher">
+    <pb-page endpoint="http://localhost:8080/exist/apps/tei-publisher" class="container">
         <pb-document id="document1" path="playground/test1.txt.tei" odd="shakespeare"></pb-document>
 
         <pb-progress></pb-progress>
-        <!-- Output the document title -->
-        <pb-view src="document1" xpath="//teiHeader/fileDesc/titleStmt/title">
-            <pb-param name="header" value="short" />
-        </pb-view>
         <pb-view id="view1" src="document1" view="page" append-footnotes animation column-separator=".tei-cb"></pb-view>
         <footer>
             <!-- Navigate to next page -->
