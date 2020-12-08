@@ -47,6 +47,7 @@ function showPublication(publication) {
   let iiifURL = publication["iiif"];
   if (iiifURL) {
     affixScriptToHead("https://unpkg.com/mirador@rc/dist/mirador.min.js", function() {
+      document.getElementById("mirador-viewer").classList.remove("d-none");
       Mirador.viewer({
         id: "mirador-viewer",
         manifests: {
