@@ -282,6 +282,7 @@ app.get("/api/searchpagedata", async function(req, res, next) {
  * @apiParam {String[]} [role]          Match travelers with these roles
  * @apiSuccess {Object[]} publications            List of publications matching search criteria
  * @apiSuccess {String}   publications.title      Publication title
+ * @apiSuccess {Number}   publications.canread    1 if IIIF manifest is available, 0 otherwise
  * @apiSuccess {Object[]} publications.travelers  List of travelers contributing the publication
  * @apiSuccess {Number}   travelers.id            Traveler ID
  * @apiSuccess {String}   travelers.name          Traveler name
@@ -334,7 +335,8 @@ app.get("/api/search", async function(req, res, next) {
     */
     let matches = await db.all(
       ` SELECT publication_id id, title, travel_dates, name traveler_name,
-          traveler_id, type contribution_type, travel_year_min, travel_year_max
+          traveler_id, type contribution_type, travel_year_min, travel_year_max,
+          (iiif IS NOT NULL) canread
         FROM contributions c
         INNER JOIN (
           SELECT pfts.rowid, p.title, p.travel_dates, p.travel_year_min, p.travel_year_max, p.iiif

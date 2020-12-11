@@ -30,7 +30,7 @@
         <div class="col-sm-10 align-items-baseline d-flex checkbox-container">
           <div>
             <input type="checkbox" id="readable" name="readable">
-            <label for="readable">Only include publications you can read here</label>
+            <label for="readable">Only include publications you can read here 🕮</label>
           </div>
         </div>
       </div>
@@ -83,6 +83,7 @@
       </details>
       <input id="search-btn" type="submit" value="Search">
     </form>
+    <p><span class="readable text-secondary">🕮 = Publication can be read on this site</span></p>
     <table id="results" class="container d-none">
       <thead>
         <tr>
@@ -95,6 +96,7 @@
         <tr>
           <td>
             <a class="title"></a>
+            <span class="readable text-secondary d-none" title="The publication can be read on this site">🕮</span>
             <ul class="author small-authorlist"></ul>
           </td>
           <td class="travel-dates text-right font-weight-bold"></td>
