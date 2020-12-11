@@ -45,6 +45,7 @@ function showDecades(decades) {
     addPublications(decade.publications, publicationTable);
     allDecades.appendChild(decadeDisplay);
   }
+  document.getElementById("loadingmsg").remove();
 }
 
 /**

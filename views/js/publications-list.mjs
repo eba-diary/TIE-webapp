@@ -55,6 +55,9 @@ function showPublications(publications) {
     }
     list.appendChild(entry)
   }
+
+  document.getElementById("loadingmsg").remove();
+
   for (let letter of indexedLetters) {
     let anchor = document.createElement("a");
     anchor.textContent = letter;
