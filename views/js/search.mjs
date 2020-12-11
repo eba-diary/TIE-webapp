@@ -88,6 +88,7 @@ function showResults(publications) {
     let title = result.querySelector(".title");
     title.href = "/publication?id=" + publication.id;
     title.textContent = publication.title;
+    if (publication.canread === 1) result.querySelector(".readable").classList.remove("d-none");
 
     let authorList = result.querySelector(".author");
     for (let traveler of publication.travelers) {
