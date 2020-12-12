@@ -13,7 +13,8 @@ const PAGES = [
   "travelers-list",
   "decades-list",
   "search",
-  "report-issue"
+  "report-issue",
+  "about"
 ]
 
 router.use("/js", express.static("views/js"));
