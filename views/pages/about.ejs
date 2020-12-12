@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nile Travelogues - About</title>
+  <%- include("../partials/head") %>
+</head>
+<body>
+  <header>
+    <%- include("../partials/header") %>
+    <h1 class="container">About Nile Travelogues</h1>
+  </header>
+  <main class="container">
+    <section>
+      <h2>Who we are</h2>
+      <p>Nile Travelogues is a part of <a href="http://www.newbookdigitaltexts.org/">Newbook
+        Digital Texts</a>, a digital humanities publishing house sponsored by the University of
+        Washington's Department of Near Eastern Languages and Civilization.
+        <ul>
+          <li>Project Director: <a href="https://sarahketchley.com/">Sarah L. Ketchley, Ph.D</a></li>
+          <li>Developer: <a href="https://fechan.github.io/">Frederick Chan</a></li>
+        </ul>
+      </p>
+    </section>
+    <section>
+      <h2>How it was made</h2>
+      <p>
+        The database was developed by Frederick Chan as an intern,
+        who made automated methods for extracting publication data, created the database, and
+        programmed this web application.
+      </p>
+
+      <h3>Data acquisition and processing</h3>
+      <p>The data from Nile Travelogues originally came from
+        <a href="https://archive.org/details/nilenotesofhowad00kalf">Nile Notes of a Howadji</a>
+        by Martin Kalfatovic, a bibliography of travel logs of people who travelled to Egypt until
+        1918. While some records were manually entered into a spreadsheet, with around 400 entries
+        that remained, it quickly became clear that automation was needed.
+      </p>
+      <p>
+        An OCRed version of the book was used to extract its contents and put them in an SQL
+        database. Since all the publications listed in Kalfatovic were in a particular format
+        described in the preface, a Python script was written that scanned the book line by line
+        and parsed the information accordingly. This line by line approach was selected because
+        OCR text is noisy; scanning artifacts may appear in unexpected locations. If this happens,
+        the script logs which entry in the book it tried to parse and skips to the next one. The
+        result was 90% of entries the script tried to parse succeeded, and the rest were
+        entered manually by Dr. Sarah Ketchley, director of the Nile Travelogues Project.
+      </p>
+
+      <h3>Book scans and other data sources</h3>
+      <p>
+        Data not available in Kalfatovic's book is acquired through different methods. For
+        example, the genders of many travelers in the database were inferred using the Wolfram
+        Engine's NameGender classifier function, taking in a name and guessing the gender.
+      </p>
+      <p>
+        Scans
+        of the books were acquired be searching the <a href="https://archive.org">Internet Archive</a>
+        for books in the Travelogues database. We get the books' <a href="https://iiif.io/">IIIF</a>
+        manifest from Internet Archive, which tells the IIIF reader where the scans are located on
+        Internet Archive's servers. The IIIF reader we use is the Mirador reader, which provides a
+        web component that displays book scans right here in our web app!
+      </p>
+    </section>
+  </main>
+  <%- include("../partials/footer") %>
+</body>
+</html>
