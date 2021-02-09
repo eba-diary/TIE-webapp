@@ -296,7 +296,7 @@ app.get("/api/search", async function(req, res, next) {
       $title: processFTSQueries(req.query["title"]),
       $summary: processFTSQueries(req.query["summary"]),
       $traveler: processFTSQueries(req.query["traveler"]),
-      $nationality: undefinedIfEmptyString(req.query["nationality"]),
+      $nationality: processFTSQueries(req.query["nationality"]),
       $gender: undefinedIfEmptyString(req.query["gender"]),
       $readable: undefinedIfEmptyString(req.query["readable"])
     };
